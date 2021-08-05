@@ -1,7 +1,8 @@
 // ==UserScript==
 // @name         Actapublica tweak
-// @namespace    http://tampermonkey.net/
 // @version      0.2
+// @downloadURL  https://raw.githubusercontent.com/rasasak/actapublica_tweak/main/actapublica_tweak.js
+// @updateURL    https://raw.githubusercontent.com/rasasak/actapublica_tweak/main/actapublica_tweak.js
 // @description  Make Actapublica great... again?
 // @author       Rasasak
 // @match        https://www.mza.cz/actapublica/matrika/detail/*
