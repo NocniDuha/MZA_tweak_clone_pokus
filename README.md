@@ -1,9 +1,8 @@
 # actapublica_tweak
 ### Tampermonkey script pro facelift MZA 
-(actapublica + sčítací operáty)
 
-- Odstraňuje "minimapu z náhledu dokumentu"
-- výpis letopočtů do záhlaví dokumentu.
+- Odstraňuje "minimapu" z náhledu dokumentu (actapublica + sčítací operáty)
+- výpis letopočtů do záhlaví dokumentu. (actapublica )
 
 ##### PŘED:
 ![pred](https://user-images.githubusercontent.com/28921659/128348320-5496679b-4415-47c0-b720-44731cab0f76.PNG)
