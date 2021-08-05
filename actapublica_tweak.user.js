@@ -3,7 +3,7 @@
 // @version      0.2
 // @downloadURL  https://raw.githubusercontent.com/rasasak/MZA_tweak/main/actapublica_tweak.user.js
 // @updateURL    https://raw.githubusercontent.com/rasasak/MZA_tweak/main/actapublica_tweak.user.js
-// @description  Make Actapublica great... again?
+// @description  Malá vylepšení pro web MZA...
 // @author       Rasasak
 // @match        https://www.mza.cz/actapublica/matrika/detail/*
 // @match        https://www.mza.cz/scitacioperaty/digisada/*
