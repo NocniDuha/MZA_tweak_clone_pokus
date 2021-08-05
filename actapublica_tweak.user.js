@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Actapublica tweak
-// @version      0.3
+// @version      0.4
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -8,7 +8,7 @@
 // @match        https://www.mza.cz/actapublica/matrika/detail/*
 // @match        https://www.mza.cz/scitacioperaty/digisada/*
 // @icon         https://www.mza.cz/actapublica/assets/favicon/android-chrome-192x192.png
-// @require http://code.jquery.com/jquery-latest.js
+// @require      http://code.jquery.com/jquery-latest.js
 // ==/UserScript==
 
 $(document).ready(function() {
