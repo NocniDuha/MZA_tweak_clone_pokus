@@ -20,11 +20,7 @@ $(document).ready(function() {
   $('.card-header .nav').append('<li class="nav-item pl-5 pr-3"><span class="small font-italic">Narození od-do</span><br><span class="font-weight-bolder">'+birth+'</span></li>')
   $('.card-header .nav').append('<li class="nav-item px-3"><span class="small font-italic">Oddaní od-do</span><br><span class="font-weight-bolder">'+married+'</span></li>')
   $('.card-header .nav').append('<li class="nav-item px-3"><span class="small font-italic">Zemřelí od-do</span><br><span class="font-weight-bolder">'+died+'</span></li>')
-  
-  $('.card-header .nav').append('<li class="nav-item">
-                                    <span class="small font-italic">Zemřelí od-do</span><br><span class="font-weight-bolder">'+died+'</span>
-                                </li>')
-    
+      
     
     //delete minimap
     $("[id^='navigator-']").remove()
