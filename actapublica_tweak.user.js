@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Actapublica tweak
 // @version      0.3
-// @downloadURL  https://raw.githubusercontent.com/rasasak/MZA_tweak/main/actapublica_tweak.user.js
-// @updateURL    https://raw.githubusercontent.com/rasasak/MZA_tweak/main/actapublica_tweak.user.js
+// @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
+// @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
 // @author       Rasasak
 // @match        https://www.mza.cz/actapublica/matrika/detail/*
