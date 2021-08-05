@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Actapublica tweak
-// @version      0.4
+// @version      0.4.1
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
