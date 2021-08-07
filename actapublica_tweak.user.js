@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         Actapublica tweak
-// @version      0.4.1
+// @version      0.5.0
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -36,4 +36,16 @@ $(document).ready(function() {
 
     //delete minimap
     $("[id^='navigator-']").remove()
+    
+    //dezoomify button
+    var dezoomify_url = $('#pill_images script').text()
+    dezoomify_url = dezoomify_url.split(";")
+    dezoomify_url = dezoomify_url[8].split(",")
+    dezoomify_url = dezoomify_url[1].replaceAll('"','')
+    dezoomify_url = dezoomify_url.replaceAll('\\','')
+    dezoomify_url = "https://dezoomify.ophir.dev/dezoomify/dezoomify.html#"+dezoomify_url
+
+    $('#seadragon-toolbar .form-group').after(`<a href="`+dezoomify_url+`" target="_blank" id="download" type="button" class="btn btn-light mr-1" title="Stáhnout (Dezoomify)" style="display: inline-block; position: relative;">
+                                                 <i class="fas fa-cloud-download-alt"></i>
+                                               </a>`)
 });
