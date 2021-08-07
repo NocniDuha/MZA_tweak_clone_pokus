@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.5.0
+// @version      0.5.1
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -41,8 +41,8 @@ $(document).ready(function() {
     var dezoomify_url = $('#pill_images script').text()
     dezoomify_url = dezoomify_url.split(";")
     dezoomify_url = dezoomify_url[8].split(",")
-    dezoomify_url = dezoomify_url[1].replaceAll('"','')
-    dezoomify_url = dezoomify_url.replaceAll('\\','')
+    dezoomify_url = dezoomify_url[1].replace(/"/g,'')
+    dezoomify_url = dezoomify_url.replace(/\\/g,'')
     dezoomify_url = "https://dezoomify.ophir.dev/dezoomify/dezoomify.html#"+dezoomify_url
 
     $('#seadragon-toolbar .form-group').after(`<a href="`+dezoomify_url+`" target="_blank" id="download" type="button" class="btn btn-light mr-1" title="Stáhnout (Dezoomify)" style="display: inline-block; position: relative;">
