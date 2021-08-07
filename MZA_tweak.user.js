@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Actapublica tweak
+// @name         MZA tweak
 // @version      0.5.0
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/actapublica_tweak.user.js
