@@ -3,10 +3,10 @@
 
 - Odstraňuje "minimapu" z náhledu dokumentu *(actapublica + sčítací operáty)*
 - výpis letopočtů do záhlaví dokumentu. *(actapublica)*
+- Tlačítko na stažení skrze [Dezoomify](https://dezoomify.ophir.dev/dezoomify/dezoomify.html) *(actapublica + sčítací operáty)*
 
-##### PŘED:
-![pred](https://user-images.githubusercontent.com/28921659/128348320-5496679b-4415-47c0-b720-44731cab0f76.PNG)
+#### PŘED:
+![pred](https://user-images.githubusercontent.com/28921659/128595996-b501d264-c5b6-408c-8050-d87e472eb1ab.png)
 
-##### PO: 
-![po](https://user-images.githubusercontent.com/28921659/128348322-9c53263d-1dea-40da-8270-078d3ea60d74.PNG)
-
+#### PO: 
+![po](https://user-images.githubusercontent.com/28921659/128595998-74060e36-7259-486e-844b-a7c3429f598e.png)
