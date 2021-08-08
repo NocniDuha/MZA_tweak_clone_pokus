@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.5.1
+// @version      0.5.2
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -48,4 +48,35 @@ $(document).ready(function() {
     $('#seadragon-toolbar .form-group').after(`<a href="`+dezoomify_url+`" target="_blank" id="download" type="button" class="btn btn-light mr-1" title="Stáhnout (Dezoomify)" style="display: inline-block; position: relative;">
                                                  <i class="fas fa-cloud-download-alt"></i>
                                                </a>`)
+    
+    
+    // normalize
+    if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
+          $('.nav-pills').prepend(`<li class="nav-item">
+				                        <a class="nav-link" href="https://www.mza.cz/scitacioperaty/digisada/search">
+                                            <i class="fas fa-arrow-circle-left"></i> Zpět na vyhledávání
+                                        </a>
+			                       </li>`)
+            $("main .container-fluid .row").first().remove()
+
+            $("#zoom-in").empty()
+            $("#zoom-in").append('<i class="fas fa-search-plus"></i>')
+
+            $("#zoom-out").empty()
+            $("#zoom-out").append('<i class="fas fa-search-minus"></i>')
+
+            $("#home").empty()
+            $("#home").append('<i class="fas fa-home"></i>')
+
+            $("#full-page").empty()
+            $("#full-page").append('<i class="fas fa-arrows-alt"></i>')
+
+            $("#prev-image").empty()
+            $("#prev-image").append('<i class="fas fa-angle-double-left"></i>')
+
+            $("#next-image").empty()
+            $("#next-image").append('<i class="fas fa-angle-double-right"></i>')
+    }
+    
+    
 });
