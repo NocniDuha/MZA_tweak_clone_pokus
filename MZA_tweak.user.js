@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.5.2
+// @version      0.5.3
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -39,11 +39,17 @@ $(document).ready(function() {
     
     //dezoomify button
     var dezoomify_url = $('#pill_images script').text()
+    var urlParams = new URLSearchParams(window.location.search);
+    var image = urlParams.get('image')+".dzi"
     dezoomify_url = dezoomify_url.split(";")
     dezoomify_url = dezoomify_url[8].split(",")
     dezoomify_url = dezoomify_url[1].replace(/"/g,'')
     dezoomify_url = dezoomify_url.replace(/\\/g,'')
-    dezoomify_url = "https://dezoomify.ophir.dev/dezoomify/dezoomify.html#"+dezoomify_url
+    dezoomify_url = dezoomify_url.split('/')
+    dezoomify_url.pop()
+    dezoomify_url.push(image)
+    dezoomify_url = dezoomify_url.join("/")
+    dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url
 
     $('#seadragon-toolbar .form-group').after(`<a href="`+dezoomify_url+`" target="_blank" id="download" type="button" class="btn btn-light mr-1" title="Stáhnout (Dezoomify)" style="display: inline-block; position: relative;">
                                                  <i class="fas fa-cloud-download-alt"></i>
