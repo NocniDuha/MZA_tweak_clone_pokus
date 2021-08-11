@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.5.3
+// @version      0.5.5
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -9,15 +9,17 @@
 // @match        https://www.mza.cz/scitacioperaty/digisada/*
 // @icon         https://www.mza.cz/actapublica/assets/favicon/android-chrome-192x192.png
 // @require      http://code.jquery.com/jquery-latest.js
+// @grant        unsafeWindow
 // ==/UserScript==
 
+
 $(document).ready(function() {
-    // dates in header
+   // dates in header
    var birth = $('#matrikaHeader .row div:nth-child(3) p strong').text()
    var married = $('#matrikaHeader .row div:nth-child(4) p strong').text()
    var died = $('#matrikaHeader .row div:nth-child(5) p strong').text()
 
-  $('.card-header .nav').append(`<li class="nav-item pl-5">
+   $('.card-header .nav').append(`<li class="nav-item pl-5">
                                    <ul class="nav">
                                      <li class="nav-item px-3">
                                        <span class="small font-italic">Narození od-do</span><br>
@@ -36,26 +38,13 @@ $(document).ready(function() {
 
     //delete minimap
     $("[id^='navigator-']").remove()
-    
-    //dezoomify button
-    var dezoomify_url = $('#pill_images script').text()
-    var urlParams = new URLSearchParams(window.location.search);
-    var image = urlParams.get('image')+".dzi"
-    dezoomify_url = dezoomify_url.split(";")
-    dezoomify_url = dezoomify_url[8].split(",")
-    dezoomify_url = dezoomify_url[1].replace(/"/g,'')
-    dezoomify_url = dezoomify_url.replace(/\\/g,'')
-    dezoomify_url = dezoomify_url.split('/')
-    dezoomify_url.pop()
-    dezoomify_url.push(image)
-    dezoomify_url = dezoomify_url.join("/")
-    dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url
 
-    $('#seadragon-toolbar .form-group').after(`<a href="`+dezoomify_url+`" target="_blank" id="download" type="button" class="btn btn-light mr-1" title="Stáhnout (Dezoomify)" style="display: inline-block; position: relative;">
+    //dezoomify button
+    $('#seadragon-toolbar .form-group').after(`<a onclick="dezoomify()" id="download" type="button" class="btn btn-light mr-1" title="Stáhnout (Dezoomify)" style="display: inline-block; position: relative;">
                                                  <i class="fas fa-cloud-download-alt"></i>
                                                </a>`)
-    
-    
+
+
     // normalize
     if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
           $('.nav-pills').prepend(`<li class="nav-item">
@@ -83,6 +72,29 @@ $(document).ready(function() {
             $("#next-image").empty()
             $("#next-image").append('<i class="fas fa-angle-double-right"></i>')
     }
-    
-    
+
+
 });
+
+if(!unsafeWindow.dezoomify)
+{
+    unsafeWindow.dezoomify = dezoomify;
+}
+
+
+function dezoomify(){
+    var dezoomify_url = $('#pill_images script').text()
+    var urlParams = new URLSearchParams(window.location.search);
+    var image = urlParams.get('image')+".dzi"
+    dezoomify_url = dezoomify_url.split(";")
+    dezoomify_url = dezoomify_url[8].split(",")
+    dezoomify_url = dezoomify_url[1].replace(/"/g,'')
+    dezoomify_url = dezoomify_url.replace(/\\/g,'')
+    dezoomify_url = dezoomify_url.split('/')
+    dezoomify_url.pop()
+    dezoomify_url.push(image)
+    dezoomify_url = dezoomify_url.join("/")
+    dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url
+    window.open(dezoomify_url, '_blank');
+}
+
