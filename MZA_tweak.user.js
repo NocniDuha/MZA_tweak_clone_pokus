@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.6.4.1
+// @version      0.6.4.2
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -11,7 +11,6 @@
 // @require      http://code.jquery.com/jquery-latest.js
 // @grant        unsafeWindow
 // ==/UserScript==
-
 
 $(document).ready(function() {
    // dates in header
@@ -59,33 +58,20 @@ $(document).ready(function() {
 				        <a class="nav-link" href="https://www.mza.cz/scitacioperaty/digisada/search">
                                             <i class="fas fa-arrow-circle-left"></i> Zpět na vyhledávání
                                         </a>
-			                       </li>`)
+			            </li>`)
             $("main .container-fluid .row").first().remove()
-
-            $("#zoom-in").empty()
-            $("#zoom-in").append('<i class="fas fa-search-plus"></i>')
-
-            $("#zoom-out").empty()
-            $("#zoom-out").append('<i class="fas fa-search-minus"></i>')
-
-            $("#home").empty()
-            $("#home").append('<i class="fas fa-home"></i>')
-
-            $("#full-page").empty()
-            $("#full-page").append('<i class="fas fa-arrows-alt"></i>')
-
-            $("#prev-image").empty()
-            $("#prev-image").append('<i class="fas fa-angle-double-left"></i>')
-
-            $("#next-image").empty()
-            $("#next-image").append('<i class="fas fa-angle-double-right"></i>')
+            $("#zoom-in").empty().append('<i class="fas fa-search-plus"></i>')
+            $("#zoom-out").empty().append('<i class="fas fa-search-minus"></i>')
+            $("#home").empty().append('<i class="fas fa-home"></i>')
+            $("#full-page").empty().append('<i class="fas fa-arrows-alt"></i>')
+            $("#prev-image").empty().append('<i class="fas fa-angle-double-left"></i>')
+            $("#next-image").empty().append('<i class="fas fa-angle-double-right"></i>')
     }
 
 
 });
 
-if(!unsafeWindow.dezoomify)
-{
+if(!unsafeWindow.dezoomify){
     unsafeWindow.dezoomify = dezoomify;
 }
 
@@ -96,8 +82,7 @@ function dezoomify(){
 }
 
 
-if(!unsafeWindow.preserve)
-{
+if(!unsafeWindow.preserve){
     unsafeWindow.preserve = preserve;
 }
 
