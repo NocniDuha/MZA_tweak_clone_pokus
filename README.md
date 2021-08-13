@@ -14,3 +14,8 @@
 
 #### PO: 
 ![po](https://user-images.githubusercontent.com/28921659/129339865-f97c3756-43bb-4b67-bd45-6bb8eb7e2962.PNG)
+
+### Instalace
+- Mít v prohlížeči doplněk pro uživatelské skripty ([Tampermonkey](https://www.tampermonkey.net/) nebo [Violentmonkey](https://violentmonkey.github.io/))
+- Otevřít [tento odkaz](https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js) na MZA_TWEAK
+- kliknout na INSTALOVAT
