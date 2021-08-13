@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.6.0
+// @version      0.6.1
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -37,7 +37,7 @@ $(document).ready(function() {
                                  </li>`)
 
     //delete minimap
-    $("[id^='navigator-']").remove()
+    g_viewer.navigator.element.style.display = "none"
 
     //dezoomify button
     $('#seadragon-toolbar .form-group').after(`<a onclick="dezoomify()" id="download" type="button" class="btn btn-light mr-1" title="Stáhnout (Dezoomify)" style="display: inline-block; position: relative;">
