@@ -1,5 +1,8 @@
 # MZA_tweak
-### Tampermonkey script pro facelift MZA 
+![Tampermonkey](https://img.shields.io/badge/Tampermonkey-%E2%9C%93-green)
+![Violentmonkey](https://img.shields.io/badge/Violentmonkey-%E2%9C%93-green)
+![Greasemonkey](https://img.shields.io/badge/Greasemonkey-✗-red)
+### User script pro facelift MZA 
 
 - Odstraňuje "minimapu" z náhledu dokumentu *(actapublica + sčítací operáty)*
 - výpis letopočtů do záhlaví dokumentu. *(actapublica)*
