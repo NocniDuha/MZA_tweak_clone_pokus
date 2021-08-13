@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.6.4
+// @version      0.6.4.1
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
