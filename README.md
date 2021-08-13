@@ -5,7 +5,7 @@
 ### User script pro facelift MZA 
 
 - Odstraňuje "minimapu" z náhledu dokumentu *(actapublica + sčítací operáty)*
-- výpis letopočtů do záhlaví dokumentu. *(actapublica)*
+- Výpis letopočtů do záhlaví dokumentu. *(actapublica)*
 - Tlačítko na stažení skrze [Dezoomify](https://dezoomify.ophir.dev/dezoomify/dezoomify.html) *(actapublica + sčítací operáty)*
 - Tlačítko na zamknutí zoomu a polohy *(actapublica + sčítací operáty)*
 
