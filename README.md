@@ -4,7 +4,7 @@
 - Odstraňuje "minimapu" z náhledu dokumentu *(actapublica + sčítací operáty)*
 - výpis letopočtů do záhlaví dokumentu. *(actapublica)*
 - Tlačítko na stažení skrze [Dezoomify](https://dezoomify.ophir.dev/dezoomify/dezoomify.html) *(actapublica + sčítací operáty)*
-- Tlačítko na zamknutí zoomu a polohy*(actapublica + sčítací operáty)*
+- Tlačítko na zamknutí zoomu a polohy *(actapublica + sčítací operáty)*
 
 #### PŘED:
 ![pred](https://user-images.githubusercontent.com/28921659/129340028-71d7b6bd-391e-4368-9860-42adc6d53ddd.PNG)
