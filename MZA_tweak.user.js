@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.6.1
+// @version      0.6.2
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -91,13 +91,9 @@ if(!unsafeWindow.dezoomify)
 
 
 function dezoomify(){
-    var dezoomify_url = $('#pill_images script').text()
+    var dezoomify_url = g_viewer.tileSources[0]
     var urlParams = new URLSearchParams(window.location.search);
     var image = urlParams.get('image')+".dzi"
-    dezoomify_url = dezoomify_url.split(";")
-    dezoomify_url = dezoomify_url[8].split(",")
-    dezoomify_url = dezoomify_url[1].replace(/"/g,'')
-    dezoomify_url = dezoomify_url.replace(/\\/g,'')
     dezoomify_url = dezoomify_url.split('/')
     dezoomify_url.pop()
     dezoomify_url.push(image)
