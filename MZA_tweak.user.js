@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.6.2
+// @version      0.6.3
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -56,7 +56,7 @@ $(document).ready(function() {
     // normalize
     if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
           $('.nav-pills').prepend(`<li class="nav-item">
-				                        <a class="nav-link" href="https://www.mza.cz/scitacioperaty/digisada/search">
+				        <a class="nav-link" href="https://www.mza.cz/scitacioperaty/digisada/search">
                                             <i class="fas fa-arrow-circle-left"></i> Zpět na vyhledávání
                                         </a>
 			                       </li>`)
@@ -89,18 +89,12 @@ if(!unsafeWindow.dezoomify)
     unsafeWindow.dezoomify = dezoomify;
 }
 
-
 function dezoomify(){
-    var dezoomify_url = g_viewer.tileSources[0]
-    var urlParams = new URLSearchParams(window.location.search);
-    var image = urlParams.get('image')+".dzi"
-    dezoomify_url = dezoomify_url.split('/')
-    dezoomify_url.pop()
-    dezoomify_url.push(image)
-    dezoomify_url = dezoomify_url.join("/")
+    var dezoomify_url = g_viewer.tileSources[g_viewer.currentPage()]
     dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url
     window.open(dezoomify_url, '_blank');
 }
+
 
 if(!unsafeWindow.preserve)
 {
