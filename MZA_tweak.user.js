@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.6.4.3
+// @version      0.6.5
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -13,47 +13,91 @@
 // ==/UserScript==
 
 $(document).ready(function() {
-   // dates in header
-   var birth = $('#matrikaHeader .row div:nth-child(3) p strong').text()
-   var married = $('#matrikaHeader .row div:nth-child(4) p strong').text()
-   var died = $('#matrikaHeader .row div:nth-child(5) p strong').text()
+	
+	// dates in header
+	var birth = $('#matrikaHeader .row div:nth-child(3) p strong').text();
+	var married = $('#matrikaHeader .row div:nth-child(4) p strong').text();
+	var died = $('#matrikaHeader .row div:nth-child(5) p strong').text();
 
-   $('.card-header .nav').append(`<li class="nav-item pl-5">
-                                   <ul class="nav">
-                                     <li class="nav-item px-3">
-                                       <span class="small font-italic">Narození od-do</span><br>
-                                       <span class="font-weight-bolder">`+birth+`</span>
-                                     </li>
-                                     <li class="nav-item px-3">
-                                       <span class="small font-italic">Oddaní od-do</span><br>
-                                       <span class="font-weight-bolder">`+married+`</span>
-                                     </li>
-                                     <li class="nav-item px-3">
-                                       <span class="small font-italic">Zemřelí od-do</span><br>
-                                       <span class="font-weight-bolder">`+died+`</span>
-                                     </li>
-                                   </ul>
-                                 </li>`)
+	$('.card-header .nav').append(`<li class="nav-item pl-5">
+					<ul class="nav">
+					  <li class="nav-item px-3">
+					    <span class="small font-italic">Narození od-do</span><br>
+					    <span class="font-weight-bolder">`+birth+`</span>
+					  </li>
+					  <li class="nav-item px-3">
+					    <span class="small font-italic">Oddaní od-do</span><br>
+					    <span class="font-weight-bolder">`+married+`</span>
+					  </li>
+					  <li class="nav-item px-3">
+					    <span class="small font-italic">Zemřelí od-do</span><br>
+					    <span class="font-weight-bolder">`+died+`</span>
+					  </li>
+					</ul>
+				      </li>`);
 
-    //delete minimap
-    g_viewer.navigator.element.style.display = "none"
+	//delete minimap
+	unsafeWindow.g_viewer.navigator.element.style.display = "none";
 
-    //dezoomify button
-    $('#seadragon-toolbar .form-group').after(`<a onclick="dezoomify()" id="download" type="button" class="btn btn-light mr-1" title="Stáhnout (Dezoomify)" style="display: inline-block; position: relative;">
-                                                 <i class="fas fa-cloud-download-alt"></i>
-                                               </a>`)
-    //preserve button
-    $('#seadragon-toolbar .form-group').after(`<a onclick="preserve()" id="preserve" type="button" class="btn btn-light mr-1" title="Zachovat zoom a polohu" style="display: inline-block; position: relative;"></a>`)
+	//toolbar for buttons  
+	let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
-    if (g_viewer.preserveViewport == false){
-        $('#preserve').append(`<i id=preserve_icon class="fas fa-fw fa-lock-open"></i>`)
-    }else{
-        $('#preserve').append(`<i id=preserve_icon class="fas fa-fw fa-lock"></i>`)
-    }
+	//dezoomify button  
+	let btnDezoomify = document.createElement('a');
+	btnDezoomify.setAttribute('id','dezoomify');
+	btnDezoomify.setAttribute('type','button');
+	btnDezoomify.setAttribute('class','btn btn-light mr-1');
+	btnDezoomify.setAttribute('title','Stáhnout (Dezoomify)');
+	btnDezoomify.setAttribute('style','display: inline-block; position: relative;');
+
+	let icnDezoomify = document.createElement('i');
+	icnDezoomify.setAttribute('class','fas fa-cloud-download-alt');
+
+  	toolbar.after(btnDezoomify);
+  	btnDezoomify.append(icnDezoomify);
+
+	btnDezoomify.onclick = () => {
+		var dezoomify_url = unsafeWindow.g_viewer.tileSources[unsafeWindow.g_viewer.currentPage()];
+		dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url;
+		console.log("DZI: "+dezoomify_url);
+		window.open(dezoomify_url, '_blank');      
+	};
+  
+
+	//preserve button
+	let btnPreserve = document.createElement('a');
+	btnPreserve.setAttribute('id','preserve');
+	btnPreserve.setAttribute('type','button');
+	btnPreserve.setAttribute('class','btn btn-light mr-1');
+	btnPreserve.setAttribute('title','Zachovat zoom a polohu');
+	btnPreserve.setAttribute('style','display: inline-block; position: relative;');
+  
+	let icnPreserve = document.createElement('i');
+	icnPreserve.setAttribute('id','preserve_icon') ;
+	if (unsafeWindow.g_viewer.preserveViewport == false){
+		icnPreserve.setAttribute('class','fas fa-fw fa-lock-open');
+	}else{
+		icnPreserve.setAttribute('class','fas fa-fw fa-lock');
+	};
+
+	toolbar.after(btnPreserve);
+	btnPreserve.append(icnPreserve);
+
+	btnPreserve.onclick = () => {
+		if (unsafeWindow.g_viewer.preserveViewport == false){
+			unsafeWindow.g_viewer.preserveViewport = true
+			icnPreserve.setAttribute('class','fas fa-fw fa-lock')
+		}else{
+			unsafeWindow.g_viewer.preserveViewport = false
+			icnPreserve.setAttribute('class','fas fa-fw fa-lock-open')
+		}
+		console.log('Preserve = '+unsafeWindow.g_viewer.preserveViewport)
+	};	
 
 
-    // normalize
-    if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
+ 
+	// normalize
+	if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
           $('.nav-pills').prepend(`<li class="nav-item">
 				        <a class="nav-link" href="https://www.mza.cz/scitacioperaty/digisada/search">
                                             <i class="fas fa-arrow-circle-left"></i> Zpět na vyhledávání
@@ -68,30 +112,4 @@ $(document).ready(function() {
             $("#next-image").empty().append('<i class="fas fa-angle-double-right"></i>')
     }
 
-
 });
-
-if(!unsafeWindow.dezoomify){
-    unsafeWindow.dezoomify = dezoomify;
-}
-
-function dezoomify(){
-    var dezoomify_url = g_viewer.tileSources[g_viewer.currentPage()]
-    dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url
-    window.open(dezoomify_url, '_blank');
-}
-
-
-if(!unsafeWindow.preserve){
-    unsafeWindow.preserve = preserve;
-}
-
-function preserve(){
-    if (g_viewer.preserveViewport == false){
-        g_viewer.preserveViewport = true
-        $('#preserve_icon').attr('class', 'fas fa-fw fa-lock')
-    }else{
-        g_viewer.preserveViewport = false
-        $('#preserve_icon').attr('class', 'fas fa-fw fa-lock-open')
-    }
-}
