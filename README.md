@@ -1,7 +1,7 @@
 # MZA_tweak
 ![Tampermonkey](https://img.shields.io/badge/Tampermonkey-%E2%9C%93-green)
 ![Violentmonkey](https://img.shields.io/badge/Violentmonkey-%E2%9C%93-green)
-![Greasemonkey](https://img.shields.io/badge/Greasemonkey-✗-red)
+![Greasemonkey](https://img.shields.io/badge/Greasemonkey-%E2%9C%93-green)
 ### User script pro facelift MZA 
 
 - Odstraňuje "minimapu" z náhledu dokumentu *(actapublica + sčítací operáty)*
@@ -10,7 +10,7 @@
 - Tlačítko na zamknutí zoomu a polohy *(actapublica + sčítací operáty)*
 
 ### Instalace
-- Mít v prohlížeči doplněk pro uživatelské skripty ([Tampermonkey](https://www.tampermonkey.net/) nebo [Violentmonkey](https://violentmonkey.github.io/))
+- Mít v prohlížeči doplněk pro uživatelské skripty ([Tampermonkey](https://www.tampermonkey.net/), [Violentmonkey](https://violentmonkey.github.io/), nebo [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/))
 - Otevřít [tento odkaz](https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js) na MZA_tweak
 - kliknout na INSTALOVAT
 
