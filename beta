@@ -15,8 +15,9 @@
 // @grant        GM.listValues
 // ==/UserScript==
 
+
 $(document).ready(function() {
-	
+
 	// dates in header
 	var birth = $('#matrikaHeader .row div:nth-child(3) p strong').text();
 	var married = $('#matrikaHeader .row div:nth-child(4) p strong').text();
@@ -42,7 +43,7 @@ $(document).ready(function() {
 	  //delete minimap
 	  //unsafeWindow.g_viewer.navigator.element.style.display = "none";
 
-	  //toolbar for buttons  
+	  //toolbar for buttons
 	  let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
     //setting button
@@ -52,19 +53,18 @@ $(document).ready(function() {
 
     //setting
     let divSettings = document.createElement('div');
-    divSettings.setAttribute('class','card');
+    divSettings.setAttribute('class','form-check');
     divSettings.style.display = "none";
 
-
+    //hiding minimap
     let inpMinimap = document.createElement('input');
     inpMinimap.setAttribute('class','form-check-input');
     inpMinimap.setAttribute('type','checkbox');
     inpMinimap.setAttribute('id','minimap');
-    inpMinimap.checked = GM.getValue( "minimapHidden", "true" )
-  console.log(GM.getValue( "minimapHidden", true ))
-    minimapToggle(GM.getValue( "minimapHidden", "true" ))
-  
-  
+    GM.getValue( "minimapHidden", "true" ).then(value => {
+        inpMinimap.checked = value;
+        minimapToggle(value)
+    });
 
     let labMinimap = document.createElement('label');
     labMinimap.setAttribute('class','form-check-label');
@@ -77,24 +77,33 @@ $(document).ready(function() {
 
 
  	  inpMinimap.onclick = () => {
-				minimapToggle(inpMinimap.checked)
-        let bool = GM.getValue("minimapHidden", "true")
-        GM.setValue("minimapHidden", !bool)
-      	console.log(GM.getValue("minimapHidden", "true"))
-	  };   
-  
-  
- 	  btnSettings.onclick = () => {
+          GM.getValue( "minimapHidden", "true" ).then(value => {
+              if(value == true){
+                  GM.setValue("minimapHidden", false);
+                  inpMinimap.checked = false;
+                  unsafeWindow.g_viewer.navigator.element.style.display = "";
+                  console.log('minimapHidden: ', false);
+              }else{
+                  GM.setValue("minimapHidden", true);
+                  inpMinimap.checked = true;
+                  unsafeWindow.g_viewer.navigator.element.style.display = "none";
+                  console.log('minimapHidden: ', true);
+              }
+          });
+	  };
+
+
+ 	 btnSettings.onclick = () => {
 		 if(divSettings.style.display == "none"){
       divSettings.style.display = ""
      }else{
        divSettings.style.display = "none"
      }
-	  }; 
-  
-  
-  
-	  //dezoomify button  
+	  };
+
+
+
+	  //dezoomify button
     let btnDezoomify = makeButton('dezoomify','Stáhnout (Dezoomify)','fas fa-cloud-download-alt');
     toolbar.after(btnDezoomify);
 
@@ -102,9 +111,9 @@ $(document).ready(function() {
 		var dezoomify_url = unsafeWindow.g_viewer.tileSources[unsafeWindow.g_viewer.currentPage()];
 		dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url;
 		console.log("DZI: "+dezoomify_url);
-		window.open(dezoomify_url, '_blank');      
+		window.open(dezoomify_url, '_blank');
 	};
-  
+
 
 	//preserve button
   let btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon() );
@@ -119,10 +128,10 @@ $(document).ready(function() {
 			btnPreserve.firstChild.setAttribute('class','fas fa-fw fa-lock-open')
 		}
 		console.log('Preserve = '+unsafeWindow.g_viewer.preserveViewport)
-	};	
+	};
 
 
- 
+
 	// normalize
 	if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
           $('.nav-pills').prepend(`<li class="nav-item">
@@ -138,23 +147,24 @@ $(document).ready(function() {
             $("#prev-image").empty().append('<i class="fas fa-angle-double-left"></i>')
             $("#next-image").empty().append('<i class="fas fa-angle-double-right"></i>')
     }
-  
-  
-  
-  
+
+
+
+
+
+
+
+});
+
  function minimapToggle(bool){
-		 if(bool == true){
-      console.log('minimap OFF')
+    if(bool == true){
       unsafeWindow.g_viewer.navigator.element.style.display = "none";
      }else{
-       console.log('minimap ON')
        unsafeWindow.g_viewer.navigator.element.style.display = "";
-
      }
-} 
+}
 
-  
-});
+
 
 function makeButton(id, title, icon){
     let btn = document.createElement('a');
@@ -178,6 +188,5 @@ function checkPreserveIcon(){
 		return 'fas fa-fw fa-lock';
 	};
 }
-
 
 
