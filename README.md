@@ -8,6 +8,8 @@
 - Výpis letopočtů do záhlaví dokumentu. *(actapublica)*
 - Tlačítko na stažení skrze [Dezoomify](https://dezoomify.ophir.dev/dezoomify/dezoomify.html) *(actapublica + sčítací operáty)*
 - Tlačítko na zamknutí zoomu a polohy *(actapublica + sčítací operáty)*
+- možnost listování po 1 nebo po 10 stránkách *(actapublica + sčítací operáty)*
+- tlačítko nastavení pro vypínání nékterých funkcí
 
 ### Instalace
 - Mít v prohlížeči doplněk pro uživatelské skripty ([Tampermonkey](https://www.tampermonkey.net/), [Violentmonkey](https://violentmonkey.github.io/), nebo [Greasemonkey](https://addons.mozilla.org/en-US/firefox/addon/greasemonkey/))
