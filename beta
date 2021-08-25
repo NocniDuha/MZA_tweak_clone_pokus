@@ -51,6 +51,7 @@ $(document).ready(function() {
     toolbar.after(btnSettings);
 
 
+
     //setting
     let divSettings = document.createElement('div');
     divSettings.setAttribute('class','form-check');
@@ -101,6 +102,23 @@ $(document).ready(function() {
      }
 	  };
 
+
+
+    //+- button
+    let btnPlus10 = makeButtonText('plusTen', '+10 snímků', '+10');
+    let btnMinus10 = makeButtonText('minusTen', '-10 snímků', '-10');
+ 
+    $('#next-image').after(btnPlus10);
+	btnPlus10.onclick = () => {
+		unsafeWindow.g_viewer.goToPage(unsafeWindow.g_viewer.currentPage()+10)
+        if()
+	};
+    //-10 button
+ 
+    $('#prev-image').before(btnMinus10);
+	btnMinus10.onclick = () => {
+		unsafeWindow.g_viewer.goToPage(unsafeWindow.g_viewer.currentPage()-10)
+	};
 
 
 	  //dezoomify button
@@ -180,6 +198,19 @@ function makeButton(id, title, icon){
     btn.append(icn);
     return btn;
 }
+
+function makeButtonText(id, title, text){
+    let btn = document.createElement('a');
+    btn.setAttribute('id', id);
+	  btn.setAttribute('type','button');
+	  btn.setAttribute('class','btn btn-light mr-1');
+	  btn.setAttribute('title',title);
+	  btn.setAttribute('style','display: inline-block; position: relative; font-weight:bold;');
+
+    btn.append(text);
+    return btn;
+}
+
 
 function checkPreserveIcon(){
 	if (unsafeWindow.g_viewer.preserveViewport == false){
