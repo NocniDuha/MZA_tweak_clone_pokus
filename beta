@@ -40,58 +40,63 @@ $(document).ready(function() {
 					</ul>
 				      </li>`);
 
-	  //delete minimap
-	  //unsafeWindow.g_viewer.navigator.element.style.display = "none";
 
-	  //toolbar for buttons
-	  let toolbar = document.querySelector('#seadragon-toolbar .form-group');
+
+	 //toolbar for buttons
+	 let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
     //setting button
     let btnSettings = makeButton('settings','Nastavení','fas fa-cog')
     toolbar.after(btnSettings);
 
 
-
     //setting
     let divSettings = document.createElement('div');
     divSettings.setAttribute('class','form-check');
     divSettings.style.display = "none";
+    $('#seadragon-toolbar').append(divSettings);
 
-    //hiding minimap
+    //minimap
+    let inpMinimap = makeInput("minimapa", "Minimapa", false, [unsafeWindow.g_viewer.navigator.element])
+ 
+ /* 
     let inpMinimap = document.createElement('input');
     inpMinimap.setAttribute('class','form-check-input');
     inpMinimap.setAttribute('type','checkbox');
-    inpMinimap.setAttribute('id','minimap');
-    GM.getValue( "minimapHidden", "true" ).then(value => {
+    inpMinimap.setAttribute('id','minimapa');
+    GM.getValue( "minimapa", false ).then(value => {
         inpMinimap.checked = value;
         minimapToggle(value)
     });
 
     let labMinimap = document.createElement('label');
     labMinimap.setAttribute('class','form-check-label');
-    labMinimap.setAttribute('for','minimap');
-    labMinimap.append('Skrýt minimapu');
+    labMinimap.setAttribute('for','minimapa');
+    labMinimap.append('Minimapa');
 
-    $('#seadragon-toolbar').after(divSettings);
+*/
     divSettings.append(inpMinimap);
-    divSettings.append(labMinimap);
+ //   divSettings.append(labMinimap);
 
 
- 	  inpMinimap.onclick = () => {
-          GM.getValue( "minimapHidden", "true" ).then(value => {
+ 	  inpMinimap.firstChild.onclick = () => {
+          GM.getValue( "minimapa", "false" ).then(value => {
               if(value == true){
-                  GM.setValue("minimapHidden", false);
+                  GM.setValue("minimapa", false);
                   inpMinimap.checked = false;
-                  unsafeWindow.g_viewer.navigator.element.style.display = "";
-                  console.log('minimapHidden: ', false);
-              }else{
-                  GM.setValue("minimapHidden", true);
-                  inpMinimap.checked = true;
                   unsafeWindow.g_viewer.navigator.element.style.display = "none";
-                  console.log('minimapHidden: ', true);
+                  console.log('Minimapa =', false);
+              }else{
+                  GM.setValue("minimapa", true);
+                  inpMinimap.checked = true;
+                  unsafeWindow.g_viewer.navigator.element.style.display = "";
+                  console.log('Minimapa =', true);
               }
           });
 	  };
+
+
+
 
 
  	 btnSettings.onclick = () => {
@@ -107,18 +112,40 @@ $(document).ready(function() {
     //+- button
     let btnPlus10 = makeButtonText('plusTen', '+10 snímků', '+10');
     let btnMinus10 = makeButtonText('minusTen', '-10 snímků', '-10');
- 
+
     $('#next-image').after(btnPlus10);
-	btnPlus10.onclick = () => {
-		unsafeWindow.g_viewer.goToPage(unsafeWindow.g_viewer.currentPage()+10)
-        if()
-	};
-    //-10 button
- 
+	  btnPlus10.onclick = () => {
+		  unsafeWindow.g_viewer.goToPage(unsafeWindow.g_viewer.currentPage()+10)
+	  };
+
     $('#prev-image').before(btnMinus10);
-	btnMinus10.onclick = () => {
-		unsafeWindow.g_viewer.goToPage(unsafeWindow.g_viewer.currentPage()-10)
-	};
+	  btnMinus10.onclick = () => {
+		  unsafeWindow.g_viewer.goToPage(unsafeWindow.g_viewer.currentPage()-10)
+	  };
+
+    let inpNav = makeInput("navigace", "Rozšířená navigace", true, [btnPlus10, btnMinus10])
+
+    divSettings.append(makeSettingSpacer());
+    divSettings.append(inpNav);
+
+
+	  inpNav.firstChild.onclick = () => {
+          GM.getValue( "navigace", true ).then(value => {
+              if(value == true){
+                  GM.setValue("navigace", false);
+                  inpNav.checked = false;
+                  btnPlus10.style.display = "none";
+                  btnMinus10.style.display = "none";
+                  console.log('Rozšířená navigace =', false);
+              }else{
+                  GM.setValue("navigace", true);
+                  inpNav.checked = true;
+                  btnPlus10.style.display = "";
+                  btnMinus10.style.display = "";
+                  console.log('Rozšířená navigace =', true);
+              }
+          });
+	  };
 
 
 	  //dezoomify button
@@ -168,19 +195,29 @@ $(document).ready(function() {
 
 
 
-
-
-
-
-});
+/*
 
  function minimapToggle(bool){
     if(bool == true){
-      unsafeWindow.g_viewer.navigator.element.style.display = "none";
+      unsafeWindow.g_viewer.navigator.element.style.display = "";
      }else{
-       unsafeWindow.g_viewer.navigator.element.style.display = "";
+       unsafeWindow.g_viewer.navigator.element.style.display = "none";
      }
 }
+
+ function navToggle(bool){
+    if(bool == true){
+      btnPlus10.style.display = "";
+      btnMinus10.style.display = "";
+     }else{
+      btnPlus10.style.display = "none"
+      btnMinus10.style.display = "none";
+     }
+}
+
+*/
+
+});
 
 
 
@@ -199,16 +236,45 @@ function makeButton(id, title, icon){
     return btn;
 }
 
-function makeButtonText(id, title, text){
+function makeButtonText(id, title, text, ){
     let btn = document.createElement('a');
     btn.setAttribute('id', id);
-	  btn.setAttribute('type','button');
-	  btn.setAttribute('class','btn btn-light mr-1');
-	  btn.setAttribute('title',title);
-	  btn.setAttribute('style','display: inline-block; position: relative; font-weight:bold;');
+    btn.setAttribute('type','button');
+    btn.setAttribute('class','btn btn-light mr-1');
+    btn.setAttribute('title',title);
+    btn.setAttribute('style','display: inline-block; position: relative; font-weight:bold;');
 
     btn.append(text);
     return btn;
+}
+
+function makeInput(id, title, def, array){
+    let div = document.createElement('div');
+    div.setAttribute('class','form-check')
+    let inp = document.createElement('input');
+    inp.setAttribute('class','form-check-input');
+    inp.setAttribute('type','checkbox');
+    inp.setAttribute('id',id);
+    GM.getValue( id, def ).then(value => {
+        inp.checked = value;
+           for(var i = 0; i < array.length; i++){
+               if(value == true){
+                   array[i].style.display = "";
+               }else{
+                   array[i].style.display = "none"
+               }
+           }
+    });
+
+    let lab = document.createElement('label');
+    lab.setAttribute('class','form-check-label');
+    lab.setAttribute('for',id);
+    lab.append(title);
+
+    div.append(inp)
+    div.append(lab);
+    return div
+
 }
 
 
@@ -220,4 +286,9 @@ function checkPreserveIcon(){
 	};
 }
 
-
+function makeSettingSpacer(){
+    let spc = document.createElement('div');
+	spc.setAttribute('class','px-2');
+    spc.append("|")
+    return spc
+}
