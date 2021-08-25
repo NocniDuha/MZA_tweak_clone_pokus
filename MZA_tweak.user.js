@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.6.5
+// @version      0.7.0
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -10,10 +10,14 @@
 // @icon         https://www.mza.cz/actapublica/assets/favicon/android-chrome-192x192.png
 // @require      http://code.jquery.com/jquery-latest.js
 // @grant        unsafeWindow
+// @grant        GM.setValue
+// @grant        GM.getValue
+// @grant        GM.listValues
 // ==/UserScript==
 
+
 $(document).ready(function() {
-	
+
 	// dates in header
 	var birth = $('#matrikaHeader .row div:nth-child(3) p strong').text();
 	var married = $('#matrikaHeader .row div:nth-child(4) p strong').text();
@@ -36,66 +40,118 @@ $(document).ready(function() {
 					</ul>
 				      </li>`);
 
-	//delete minimap
-	unsafeWindow.g_viewer.navigator.element.style.display = "none";
 
-	//toolbar for buttons  
-	let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
-	//dezoomify button  
-	let btnDezoomify = document.createElement('a');
-	btnDezoomify.setAttribute('id','dezoomify');
-	btnDezoomify.setAttribute('type','button');
-	btnDezoomify.setAttribute('class','btn btn-light mr-1');
-	btnDezoomify.setAttribute('title','Stáhnout (Dezoomify)');
-	btnDezoomify.setAttribute('style','display: inline-block; position: relative;');
+	  //toolbar for buttons
+	  let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
-	let icnDezoomify = document.createElement('i');
-	icnDezoomify.setAttribute('class','fas fa-cloud-download-alt');
+    //setting button
+    let btnSettings = makeButton('settings','Nastavení','fas fa-cog')
+    toolbar.after(btnSettings);
 
-  	toolbar.after(btnDezoomify);
-  	btnDezoomify.append(icnDezoomify);
+    //setting
+    let divSettings = document.createElement('div');
+    divSettings.setAttribute('class','form-check');
+    divSettings.style.display = "none";
+    $('#seadragon-toolbar').append(divSettings);
+
+  	 btnSettings.onclick = () => {
+		 if(divSettings.style.display == "none"){
+      divSettings.style.display = ""
+     }else{
+       divSettings.style.display = "none"
+     }
+	  };
+
+    //minimap
+    let inpMinimap = makeInput("minimapa", "Minimapa", false, [unsafeWindow.g_viewer.navigator.element])
+    divSettings.append(inpMinimap);
+
+ 	  inpMinimap.firstChild.onclick = () => {
+          GM.getValue( "minimapa", "false" ).then(value => {
+              if(value == true){
+                  GM.setValue("minimapa", false);
+                  inpMinimap.firstChild.checked = false;
+                  unsafeWindow.g_viewer.navigator.element.style.display = "none";
+                  console.log('Minimapa =', false);
+              }else{
+                  GM.setValue("minimapa", true);
+                  inpMinimap.firstChild.checked = true;
+                  unsafeWindow.g_viewer.navigator.element.style.display = "";
+                  console.log('Minimapa =', true);
+              }
+          });
+	  };
+
+
+    //navigation
+    let btnPlus10 = makeButtonText('plusTen', '+10 snímků', '+10');
+    let btnMinus10 = makeButtonText('minusTen', '-10 snímků', '-10');
+
+    $('#next-image').after(btnPlus10);
+	  btnPlus10.onclick = () => {
+		  unsafeWindow.g_viewer.goToPage(unsafeWindow.g_viewer.currentPage()+10)
+	  };
+
+    $('#prev-image').before(btnMinus10);
+	  btnMinus10.onclick = () => {
+		  unsafeWindow.g_viewer.goToPage(unsafeWindow.g_viewer.currentPage()-10)
+	  };
+
+    let inpNav = makeInput("navigace", "Rozšířená navigace", true, [btnPlus10, btnMinus10])
+
+    divSettings.append(makeSettingSpacer());
+    divSettings.append(inpNav);
+
+
+	  inpNav.firstChild.onclick = () => {
+          GM.getValue( "navigace", true ).then(value => {
+              if(value == true){
+                  GM.setValue("navigace", false);
+                  inpNav.firstChild.checked = false;
+                  btnPlus10.style.display = "none";
+                  btnMinus10.style.display = "none";
+                  console.log('Rozšířená navigace =', false);
+              }else{
+                  GM.setValue("navigace", true);
+                  inpNav.firstChild.checked = true;
+                  btnPlus10.style.display = "";
+                  btnMinus10.style.display = "";
+                  console.log('Rozšířená navigace =', true);
+              }
+          });
+	  };
+
+
+	  //dezoomify button
+    let btnDezoomify = makeButton('dezoomify','Stáhnout (Dezoomify)','fas fa-cloud-download-alt');
+    toolbar.after(btnDezoomify);
 
 	btnDezoomify.onclick = () => {
 		var dezoomify_url = unsafeWindow.g_viewer.tileSources[unsafeWindow.g_viewer.currentPage()];
 		dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url;
 		console.log("DZI: "+dezoomify_url);
-		window.open(dezoomify_url, '_blank');      
+		window.open(dezoomify_url, '_blank');
 	};
-  
+
 
 	//preserve button
-	let btnPreserve = document.createElement('a');
-	btnPreserve.setAttribute('id','preserve');
-	btnPreserve.setAttribute('type','button');
-	btnPreserve.setAttribute('class','btn btn-light mr-1');
-	btnPreserve.setAttribute('title','Zachovat zoom a polohu');
-	btnPreserve.setAttribute('style','display: inline-block; position: relative;');
-  
-	let icnPreserve = document.createElement('i');
-	icnPreserve.setAttribute('id','preserve_icon') ;
-	if (unsafeWindow.g_viewer.preserveViewport == false){
-		icnPreserve.setAttribute('class','fas fa-fw fa-lock-open');
-	}else{
-		icnPreserve.setAttribute('class','fas fa-fw fa-lock');
-	};
-
+  let btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon() );
 	toolbar.after(btnPreserve);
-	btnPreserve.append(icnPreserve);
 
 	btnPreserve.onclick = () => {
 		if (unsafeWindow.g_viewer.preserveViewport == false){
 			unsafeWindow.g_viewer.preserveViewport = true
-			icnPreserve.setAttribute('class','fas fa-fw fa-lock')
+			btnPreserve.firstChild.setAttribute('class','fas fa-fw fa-lock')
 		}else{
 			unsafeWindow.g_viewer.preserveViewport = false
-			icnPreserve.setAttribute('class','fas fa-fw fa-lock-open')
+			btnPreserve.firstChild.setAttribute('class','fas fa-fw fa-lock-open')
 		}
 		console.log('Preserve = '+unsafeWindow.g_viewer.preserveViewport)
-	};	
+	};
 
 
- 
+
 	// normalize
 	if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
           $('.nav-pills').prepend(`<li class="nav-item">
@@ -112,4 +168,78 @@ $(document).ready(function() {
             $("#next-image").empty().append('<i class="fas fa-angle-double-right"></i>')
     }
 
+
 });
+
+
+function makeButton(id, title, icon){
+    let btn = document.createElement('a');
+    btn.setAttribute('id', id);
+	  btn.setAttribute('type','button');
+	  btn.setAttribute('class','btn btn-light mr-1');
+	  btn.setAttribute('title',title);
+	  btn.setAttribute('style','display: inline-block; position: relative;');
+
+    let icn = document.createElement('i');
+	  icn.setAttribute('class',icon);
+
+    btn.append(icn);
+    return btn;
+}
+
+function makeButtonText(id, title, text, ){
+    let btn = document.createElement('a');
+    btn.setAttribute('id', id);
+    btn.setAttribute('type','button');
+    btn.setAttribute('class','btn btn-light mr-1');
+    btn.setAttribute('title',title);
+    btn.setAttribute('style','display: inline-block; position: relative; font-weight:bold;');
+
+    btn.append(text);
+    return btn;
+}
+
+function makeInput(id, title, def, array){
+    let div = document.createElement('div');
+    div.setAttribute('class','form-check')
+    let inp = document.createElement('input');
+    inp.setAttribute('class','form-check-input');
+    inp.setAttribute('type','checkbox');
+    inp.setAttribute('id',id);
+    GM.getValue( id, def ).then(value => {
+        inp.checked = value;
+           for(var i = 0; i < array.length; i++){
+               if(value == true){
+                   array[i].style.display = "";
+               }else{
+                   array[i].style.display = "none"
+               }
+           }
+    });
+
+    let lab = document.createElement('label');
+    lab.setAttribute('class','form-check-label');
+    lab.setAttribute('for',id);
+    lab.append(title);
+
+    div.append(inp)
+    div.append(lab);
+    return div
+
+}
+
+
+function checkPreserveIcon(){
+	if (unsafeWindow.g_viewer.preserveViewport == false){
+		return 'fas fa-fw fa-lock-open';
+	}else{
+		return 'fas fa-fw fa-lock';
+	};
+}
+
+function makeSettingSpacer(){
+    let spc = document.createElement('div');
+	spc.setAttribute('class','px-2');
+    spc.append("|")
+    return spc
+}
