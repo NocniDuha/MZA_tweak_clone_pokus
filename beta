@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.7.1
+// @version      0.7.2
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -146,6 +146,10 @@
     let inpCompact = makeInput("compact", "Kompaktní režim", false)
     divSettings.append(makeSettingSpacer());
     divSettings.append(inpCompact);
+GM.getValue( "compact", false ).then(value => {
+    inpCompact.firstChild.checked = value;
+    compacted(value)
+});
 
 	  inpCompact.firstChild.onclick = () => {
           GM.getValue( "compact", false ).then(value => {
@@ -210,6 +214,9 @@
             $("#prev-image").empty().append('<i class="fas fa-angle-double-left"></i>');
             $("#next-image").empty().append('<i class="fas fa-angle-double-right"></i>');
             $("#full-page").empty().append('<i class="fas fa-expand"></i>');
+            let hamburger = makeHamburger();
+            $("main .container-fluid .card .card-body").first().attr('id','scitaniHeader').addClass('collapse');
+            $(".card-header").prepend(hamburger);
     }
 
 
@@ -243,13 +250,14 @@ function makeButtonText(id, title, text, ){
     return btn;
 }
 
-function makeInput(id, title, def, array){
+function makeInput(id, title, def, array=false){
     let div = document.createElement('div');
     div.setAttribute('class','form-check')
     let inp = document.createElement('input');
     inp.setAttribute('class','form-check-input');
     inp.setAttribute('type','checkbox');
     inp.setAttribute('id',id);
+    if(array){
     GM.getValue( id, def ).then(value => {
         inp.checked = value;
            for(var i = 0; i < array.length; i++){
@@ -260,7 +268,7 @@ function makeInput(id, title, def, array){
                }
            }
     });
-
+    };
     let lab = document.createElement('label');
     lab.setAttribute('class','form-check-label');
     lab.setAttribute('for',id);
@@ -302,34 +310,69 @@ function addGlobalStyle(css) {
 
 function compacted(bool){
     if(bool){//TRUE
-        if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light .container-md .row .col a img').attr('style','height: 40px')
-                  $('body .bg-light .container-md .row .col:nth-child(2) div:nth-child(2)').hide()
-                  addGlobalStyle('.card-body { padding: 5px ! important; };');
-        }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
-                  $('body .container-md a img').attr('style','height: 40px')
-                  addGlobalStyle('.card-body { padding: 5px ! important; };');
-        };
+       layoutCompact()
     }else{//FALSE
-        if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light .container-md .row .col a img').attr('style','height: 80px')
-                  $('body .bg-light .container-md .row .col:nth-child(2) div:nth-child(2)').show()
-                  addGlobalStyle('.card-body { padding: 20px ! important; };');
-        }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
-                 $('body .container-md a img').attr('style','height: 50px')
-                 addGlobalStyle('.card-body { padding: 20px ! important; };');
-        };
+       layoutNormal()
     };
 };
 
-/*if (window.location.href.indexOf("actapublica/matrika/detail") > -1) {
-    addGlobalStyle(`
-         .card-body { padding: 5px ! important; };
-         footer { padding-top: 10px ! important; };
-         `);
-    $('body .bg-light .container-md .row .col a img').attr('style','height: 40px')
-    $('body .bg-light .container-md .row .col:nth-child(2) div:nth-child(2)').remove()
-    $('.navbar').addClass('py-1')
-    $('footer .container-md .mt-2').remove();
-    $('footer').removeClass('py-3').addClass('py-2')
-}*/
+function layoutCompact(){
+        if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
+                  $('body .bg-light .container-md .row .col a img').attr('style','height: 40px')
+                  $('body .bg-light .container-md .row .col:nth-child(2) div:nth-child(2)').hide()
+                  addGlobalStyle(`.card-body { padding: 4px !important; };`);
+                  $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
+                  $('footer .container-md .mt-2').hide();
+                  $('footer').removeClass('py-3').addClass('py-2')
+                  addGlobalStyle(`.card-header { padding: 4px 16px  4px 16px !important; };`);
+                  addGlobalStyle(`td { padding: 6px 12px  6px 12px !important; };`);
+
+        }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
+                  $('body .container-md a img').attr('style','height: 40px')
+                  addGlobalStyle('.card-body { padding: 4px ! important; };');
+                  $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
+                 $('footer').removeClass('py-3').addClass('py-2')
+
+        };
+}
+
+
+function layoutNormal(){
+        if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
+                  $('body .bg-light .container-md .row .col a img').attr('style','height: 80px')
+                  $('body .bg-light .container-md .row .col:nth-child(2) div:nth-child(2)').show()
+                  addGlobalStyle(`.card-body { padding: 20px !important; };`);
+                  $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
+                  $('footer .container-md .mt-2').show();
+                  $('footer').removeClass('py-2').addClass('py-3')
+                  addGlobalStyle(`.card-header { padding: 12px 20px  12px 20px !important; };`);
+                  addGlobalStyle(`td { padding: 12px 12px  12px 12px !important; };`);
+
+        }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
+                 $('body .container-md a img').attr('style','height: 50px')
+                 addGlobalStyle('.card-body { padding: 20px ! important; };');
+                 $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
+                 $('footer').removeClass('py-2').addClass('py-3')
+
+
+        };
+}
+
+function makeHamburger(){
+    let btn = document.createElement('button');
+    btn.setAttribute('class', 'btn btn-primary collapsed');
+    btn.setAttribute('type','button');
+    btn.setAttribute('data-toggle','collapse');
+    btn.setAttribute('data-target','#scitaniHeader');
+    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-controls','scitaniHeader');
+    btn.setAttribute('title','Zobrazit základní informace o digitalizační sadě');
+
+    let icn = document.createElement('i');
+	  icn.setAttribute('class','fas fa-bars');
+
+    btn.append(icn);
+    return btn;
+
+}
+
