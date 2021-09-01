@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.7.5
+// @version      0.7.6
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -21,6 +21,9 @@
         $('#prev-image').after($('#next-image'))
 
     }
+
+
+unsafeWindow.g_viewer.zoomPerClick = 1;
 //$(document).ready(function() {
 
 	// dates in header
