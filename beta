@@ -17,6 +17,10 @@
 // ==/UserScript==
 
     $("#seadragon-toolbar").children().last().height('4px')
+    if (window.location.href.indexOf("actapublica/matrika/detail") > -1) {
+        $('#prev-image').after($('#next-image'))
+
+    }
 //$(document).ready(function() {
 
 	// dates in header
@@ -46,6 +50,20 @@
 	  //toolbar for buttons
 	  let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
+
+	  //dezoomify button
+    let btnDezoomify = makeButton('dezoomify','Stáhnout (Dezoomify)','fas fa-cloud-download-alt');
+    toolbar.after(btnDezoomify);
+
+	btnDezoomify.onclick = () => {
+		var dezoomify_url = unsafeWindow.g_viewer.tileSources[unsafeWindow.g_viewer.currentPage()];
+		dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url;
+		console.log("DZI: "+dezoomify_url);
+		window.open(dezoomify_url, '_blank');
+	};
+
+
+
     //setting button
     let btnSettings = makeButton('settings','Nastavení','fas fa-cog')
     toolbar.after(btnSettings);
@@ -65,8 +83,36 @@
      }
 	  };
 
+       //kompaktni rezim
+    let inpCompact = makeInput("compact", "Kompaktní režim", false)
+    divSettings.append(inpCompact);
+GM.getValue( "compact", false ).then(value => {
+    inpCompact.firstChild.checked = value;
+    compacted(value)
+});
+
+	  inpCompact.firstChild.onclick = () => {
+          GM.getValue( "compact", false ).then(value => {
+              if(value == true){
+                  GM.setValue("compact", false);
+                  inpCompact.firstChild.checked = false;
+                  compacted(false)
+                  console.log('Kompaktní režim =', false);
+              }else{
+                  GM.setValue("compact", true);
+                  inpCompact.firstChild.checked = true;
+                  compacted(true)
+                  console.log('Kompaktní režim =', true);
+              }
+          });
+	  };
+
+
+
     //minimap
+     if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
     let inpMinimap = makeInput("minimapa", "Minimapa", false, [unsafeWindow.g_viewer.navigator.element])
+        divSettings.append(makeSettingSpacer());
     divSettings.append(inpMinimap);
 
  	  inpMinimap.firstChild.onclick = () => {
@@ -84,7 +130,7 @@
               }
           });
 	  };
-
+     };
 
     //navigation
     let btnPlus10 = makeButtonText('plusTen', '+10 snímků', '+10');
@@ -164,64 +210,14 @@
 
 
 
-       //kompaktni rezim
-    let inpCompact = makeInput("compact", "Kompaktní režim", false)
-    divSettings.append(makeSettingSpacer());
-    divSettings.append(inpCompact);
-GM.getValue( "compact", false ).then(value => {
-    inpCompact.firstChild.checked = value;
-    compacted(value)
-});
-
-	  inpCompact.firstChild.onclick = () => {
-          GM.getValue( "compact", false ).then(value => {
-              if(value == true){
-                  GM.setValue("compact", false);
-                  inpCompact.firstChild.checked = false;
-                  compacted(false)
-                  console.log('Kompaktní režim =', false);
-              }else{
-                  GM.setValue("compact", true);
-                  inpCompact.firstChild.checked = true;
-                  compacted(true)
-                  console.log('Kompaktní režim =', true);
-              }
-          });
-	  };
-
-
-	  //dezoomify button
-    let btnDezoomify = makeButton('dezoomify','Stáhnout (Dezoomify)','fas fa-cloud-download-alt');
-    toolbar.after(btnDezoomify);
-
-	btnDezoomify.onclick = () => {
-		var dezoomify_url = unsafeWindow.g_viewer.tileSources[unsafeWindow.g_viewer.currentPage()];
-		dezoomify_url = "https://dezoomify.ophir.dev/#"+dezoomify_url;
-		console.log("DZI: "+dezoomify_url);
-		window.open(dezoomify_url, '_blank');
-	};
-
-
-	//preserve button
-  let btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon() );
-	toolbar.after(btnPreserve);
-
-	btnPreserve.onclick = () => {
-		if (unsafeWindow.g_viewer.preserveViewport == false){
-			unsafeWindow.g_viewer.preserveViewport = true
-			btnPreserve.firstChild.setAttribute('class','fas fa-fw fa-lock')
-		}else{
-			unsafeWindow.g_viewer.preserveViewport = false
-			btnPreserve.firstChild.setAttribute('class','fas fa-fw fa-lock-open')
-		}
-		console.log('Preserve = '+unsafeWindow.g_viewer.preserveViewport)
-	};
 
 
 
 	// normalize
     $("#full-page").empty().append('<i class="fas fa-expand"></i>');
-
+    $("#step-10-forward").hide();
+    $("#step-10-backward").hide();
+    $("#plus25").after($("#last-image"));
 	if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
           $('.nav-pills').prepend(`<li class="nav-item">
 				        <a class="nav-link" href="https://www.mza.cz/scitacioperaty/digisada/search">
@@ -239,8 +235,24 @@ GM.getValue( "compact", false ).then(value => {
             let hamburger = makeHamburger();
             $("main .container-fluid .card .card-body").first().attr('id','scitaniHeader').addClass('collapse');
             $(".card-header").prepend(hamburger);
-    }
 
+        	//preserve button
+        let btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon() );
+        $("#dezoomify").after(btnPreserve);
+
+        btnPreserve.onclick = () => {
+            if (unsafeWindow.g_viewer.preserveViewport == false){
+                unsafeWindow.g_viewer.preserveViewport = true
+                btnPreserve.firstChild.setAttribute('class','fas fa-lock')
+            }else{
+                unsafeWindow.g_viewer.preserveViewport = false
+                btnPreserve.firstChild.setAttribute('class','fas fa-unlock')
+            }
+            console.log('Preserve = '+unsafeWindow.g_viewer.preserveViewport)
+        };
+
+
+    }
 
 //});
 
@@ -305,9 +317,9 @@ function makeInput(id, title, def, array=false){
 
 function checkPreserveIcon(){
 	if (unsafeWindow.g_viewer.preserveViewport == false){
-		return 'fas fa-fw fa-lock-open';
+		return 'fas fa-unlock';
 	}else{
-		return 'fas fa-fw fa-lock';
+		return 'fas fa-lock';
 	};
 }
 
@@ -348,12 +360,14 @@ function layoutCompact(){
                   $('footer').removeClass('py-3').addClass('py-2')
                   addGlobalStyle(`.card-header { padding: 4px 16px  4px 16px !important; };`);
                   addGlobalStyle(`td { padding: 6px 12px  6px 12px !important; };`);
+                  $('.input-group-prepend').hide()
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
                   $('body .container-md a img').attr('style','height: 40px')
                   addGlobalStyle('.card-body { padding: 4px ! important; };');
                   $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
                  $('footer').removeClass('py-3').addClass('py-2')
+                $('.input-group-prepend').hide()
 
         };
 }
@@ -369,12 +383,14 @@ function layoutNormal(){
                   $('footer').removeClass('py-2').addClass('py-3')
                   addGlobalStyle(`.card-header { padding: 12px 20px  12px 20px !important; };`);
                   addGlobalStyle(`td { padding: 12px 12px  12px 12px !important; };`);
+                 $('.input-group-prepend').show()
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
                  $('body .container-md a img').attr('style','height: 50px')
                  addGlobalStyle('.card-body { padding: 20px ! important; };');
                  $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
                  $('footer').removeClass('py-2').addClass('py-3')
+                $('.input-group-prepend').show()
 
 
         };
