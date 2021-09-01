@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.7.6
+// @version      0.7.7
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -23,7 +23,8 @@
     }
 
 
-unsafeWindow.g_viewer.zoomPerClick = 1;
+unsafeWindow.g_viewer.gestureSettingsMouse.clickToZoom = false
+unsafeWindow.g_viewer.gestureSettingsMouse.dblClickToZoom = true   
 //$(document).ready(function() {
 
 	// dates in header
