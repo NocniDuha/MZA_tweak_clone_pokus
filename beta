@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.7.0
+// @version      0.7.8
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -18,17 +18,26 @@
 
     $("#seadragon-toolbar").children().last().height('4px')
     if (window.location.href.indexOf("actapublica/matrika/detail") > -1) {
-        $('#prev-image').after($('#next-image'))
+        $('#prev-image').after($('#next-image')) //posun šipek na matrikách
 
     }
-//$(document).ready(function() {
 
+// click2zoom => dblClick2zoom
+unsafeWindow.g_viewer.gestureSettingsMouse.clickToZoom = false
+unsafeWindow.g_viewer.gestureSettingsMouse.dblClickToZoom = true
+//$(document).ready(function() {
+unsafeWindow.g_viewer.showReferenceStrip = true;
+unsafeWindow.g_viewer.referenceStripScroll = "vertical";
 	// dates in header
 	var birth = $('#matrikaHeader .row div:nth-child(3) p strong').text();
 	var married = $('#matrikaHeader .row div:nth-child(4) p strong').text();
 	var died = $('#matrikaHeader .row div:nth-child(5) p strong').text();
 
-	$('.card-header .nav').append(`<li class="nav-item pl-5">
+	var ibirth = $('#matrikaHeader .row div:nth-child(3) p:last-child').text();
+	var imarried = $('#matrikaHeader .row div:nth-child(4) p:last-child ').text();
+	var idied = $('#matrikaHeader .row div:nth-child(5) p:last-child ').text();
+
+/*	$('.card-header .nav').append(`<li class="nav-item pl-5">
 					<ul class="nav">
 					  <li class="nav-item px-3">
 					    <span class="small font-italic">Narození od-do</span><br>
@@ -43,8 +52,34 @@
 					    <span class="font-weight-bolder">`+died+`</span>
 					  </li>
 					</ul>
-				      </li>`);
+				      </li>`);*/
 
+
+	$('.card-header .nav').append(`<li class="nav-item pl-5">
+					<ul class="nav">
+                      <li class="nav-item pt-2 pl-3">
+					    <span class="align-middle" style="font-size:1.5rem">N</span><br>
+					  </li>
+					  <li class="nav-item pl-2 pr-3">
+					    <span class="font-weight-bolder">`+birth+`</span><br>
+					    <span class="small font-italic">`+ibirth+`</span>
+					  </li>
+                      <li class="nav-item pt-2 pl-3">
+					    <span class="align-middle" style="font-size:1.5rem">O</span><br>
+					  </li>
+					  <li class="nav-item pl-2 pr-3">
+					    <span class="font-weight-bolder">`+married+`</span><br>
+					    <span class="small font-italic">`+imarried+`</span>
+					  </li>
+                       <li class="nav-item pt-2 pl-3">
+					    <span class="align-middle" style="font-size:1.5rem">Z</span><br>
+					  </li>
+					  <li class="nav-item pl-2 pr-3">
+					    <span class="font-weight-bolder">`+died+`</span><br>
+					    <span class="small font-italic">`+idied+`</span>
+					  </li>
+					</ul>
+				      </li>`);
 
 
 	  //toolbar for buttons
@@ -208,6 +243,37 @@ GM.getValue( "compact", false ).then(value => {
           });
 	  };
 
+ //reference strip
+    let inpStrip = makeInput("reference_strip", "Referenční pás", false )
+
+    divSettings.append(makeSettingSpacer());
+    divSettings.append(inpStrip);
+GM.getValue( "reference_strip", false ).then(value => {
+    inpStrip.firstChild.checked = value;
+    if(value){//TRUE
+       unsafeWindow.g_viewer.addReferenceStrip();
+    }else{//FALSE
+       unsafeWindow.g_viewer.removeReferenceStrip();
+    };
+});
+
+	  inpStrip.firstChild.onclick = () => {
+          GM.getValue( "reference_strip", false ).then(value => {
+              if(value == true){
+                  GM.setValue("reference_strip", false);
+                  inpStrip.firstChild.checked = false;
+                  unsafeWindow.g_viewer.removeReferenceStrip();
+                  console.log('Referenční pás =', false);
+              }else{
+                  GM.setValue("reference_strip", true);
+                  inpStrip.firstChild.checked = true;
+                  unsafeWindow.g_viewer.addReferenceStrip();
+                  console.log('Referenční pás =', true);
+              }
+          });
+	  };
+
+
 
 
 
@@ -298,7 +364,7 @@ function makeInput(id, title, def, array=false){
                if(value == true){
                    array[i].style.display = "";
                }else{
-                   array[i].style.display = "none"
+                   array[i].style.display = "none";
                }
            }
     });
