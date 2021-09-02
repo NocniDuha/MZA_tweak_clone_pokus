@@ -60,21 +60,21 @@ unsafeWindow.g_viewer.referenceStripScroll = "vertical";
                       <li class="nav-item pt-2 pl-3">
 					    <span class="align-middle" style="font-size:1.5rem">N</span><br>
 					  </li>
-					  <li class="nav-item pl-2 pr-3">
+					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
 					    <span class="font-weight-bolder">`+birth+`</span><br>
 					    <span class="small font-italic">`+ibirth+`</span>
 					  </li>
                       <li class="nav-item pt-2 pl-3">
 					    <span class="align-middle" style="font-size:1.5rem">O</span><br>
 					  </li>
-					  <li class="nav-item pl-2 pr-3">
+					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
 					    <span class="font-weight-bolder">`+married+`</span><br>
 					    <span class="small font-italic">`+imarried+`</span>
 					  </li>
                        <li class="nav-item pt-2 pl-3">
 					    <span class="align-middle" style="font-size:1.5rem">Z</span><br>
 					  </li>
-					  <li class="nav-item pl-2 pr-3">
+					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
 					    <span class="font-weight-bolder">`+died+`</span><br>
 					    <span class="small font-italic">`+idied+`</span>
 					  </li>
