@@ -28,6 +28,8 @@ unsafeWindow.g_viewer.gestureSettingsMouse.dblClickToZoom = true
 //$(document).ready(function() {
 unsafeWindow.g_viewer.showReferenceStrip = true;
 unsafeWindow.g_viewer.referenceStripScroll = "vertical";
+
+    if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
 	// dates in header
 	var birth = $('#matrikaHeader .row div:nth-child(3) p strong').text();
 	var married = $('#matrikaHeader .row div:nth-child(4) p strong').text();
@@ -80,6 +82,36 @@ unsafeWindow.g_viewer.referenceStripScroll = "vertical";
 					  </li>
 					</ul>
 				      </li>`);
+
+          }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
+             let hamburger = makeHamburger();
+            $("main .container-fluid .card .card-body").first().attr('id','scitaniHeader').addClass('collapse');
+            $(".card-header").empty().prepend(hamburger);
+	var city = $('main div .card .collapse .row div:nth-child(1) p strong').text();
+	var nubers = $('main div .card .collapse .row div:nth-child(2) p ').first().text();
+	var year = $('main div .card .collapse .row:nth-child(2) div:nth-child(3) p ').first().text();
+              console.log($('main div .card .collapse .row div:nth-child(2) p').first().text());
+         $('.card-header').append('<ul id="header-nav" class="nav" style="font-size: 60%;"></ul>');
+         $('#header-nav').append(hamburger);
+         $('#header-nav').append(`
+					  <li class="nav-item px-3 " style="">
+					    <span class="small font-italic">Město/obec</span><br>
+					    <span class="font-weight-bolder">`+city+`</span>
+					  </li>
+					  <li class="nav-item px-3 " style="">
+					    <span class="small font-italic">Číslo popisné od-do</span><br>
+					    <span class="font-weight-bolder">`+nubers+`</span>
+					  </li>
+					  <li class="nav-item px-3 " style="">
+					    <span class="small font-italic">Rok sčítání</span><br>
+					    <span class="font-weight-bolder">`+year+`</span>
+					  </li>
+				      `);
+        };
+
+
+
+
 
 
 	  //toolbar for buttons
@@ -278,7 +310,7 @@ GM.getValue( "reference_strip", false ).then(value => {
 
 
 
-
+	// normalize
 	// normalize
     $("#full-page").empty().append('<i class="fas fa-expand"></i>');
     $("#step-10-forward").hide();
@@ -298,9 +330,7 @@ GM.getValue( "reference_strip", false ).then(value => {
             $("#prev-image").empty().append('<i class="fas fa-angle-double-left"></i>');
             $("#next-image").empty().append('<i class="fas fa-angle-double-right"></i>');
             $("#full-page").empty().append('<i class="fas fa-expand"></i>');
-            let hamburger = makeHamburger();
-            $("main .container-fluid .card .card-body").first().attr('id','scitaniHeader').addClass('collapse');
-            $(".card-header").prepend(hamburger);
+
 
         	//preserve button
         let btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon() );
@@ -418,8 +448,11 @@ function compacted(bool){
 
 function layoutCompact(){
         if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light .container-md .row .col a img').attr('style','height: 40px')
-                  $('body .bg-light .container-md .row .col:nth-child(2) div:nth-child(2)').hide()
+                  $('body .bg-light').hide();
+                  $('body nav div').first().removeClass('container-md').addClass('container-fluid');
+                  $('body nav').prepend("<a class='navbar-brand px-2' id='nav-brand' href='https://www.mza.cz/actapublica/' style='color:#66380B; background-color:white;'>ACTA PUBLICA</a>");
+                  $('#search').attr('title','Vyhledávání').html('<i class="fas fa-search"></i>');
+                  $('main div div div .nav .navbar-text').hide();
                   addGlobalStyle(`.card-body { padding: 4px !important; };`);
                   $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
                   $('footer .container-md .mt-2').hide();
@@ -429,7 +462,10 @@ function layoutCompact(){
                   $('.input-group-prepend').hide()
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
-                  $('body .container-md a img').attr('style','height: 40px')
+                  $('body .navbar-light').hide();
+                  $('body nav div').first().removeClass('container-md').addClass('container-fluid');
+                  $('body nav').css('border-bottom-width','0px');
+                  $('body nav').prepend("<a class='navbar-brand px-2' id='nav-brand' href='https://www.mza.cz/scitacioperaty/' style='color:#0B3152; background-color:white;'>Sčítací operáty</a>");
                   addGlobalStyle('.card-body { padding: 4px ! important; };');
                   $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
                  $('footer').removeClass('py-3').addClass('py-2')
@@ -441,8 +477,11 @@ function layoutCompact(){
 
 function layoutNormal(){
         if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light .container-md .row .col a img').attr('style','height: 80px')
-                  $('body .bg-light .container-md .row .col:nth-child(2) div:nth-child(2)').show()
+                  $('body .bg-light').show();
+                  $('body nav div').first().removeClass('container-fluid').addClass('container-md');
+                  $('#nav-brand').remove();
+                  $('#search').attr('title','').html('<i class="fas fa-search"></i>&nbsp;Vyhledávání');
+                  $('main div div div .nav .navbar-text').show();
                   addGlobalStyle(`.card-body { padding: 20px !important; };`);
                   $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
                   $('footer .container-md .mt-2').show();
@@ -452,7 +491,10 @@ function layoutNormal(){
                  $('.input-group-prepend').show()
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
-                 $('body .container-md a img').attr('style','height: 50px')
+                 $('body .navbar-light').show();
+                 $('body nav div').first().removeClass('container-fluid').addClass('container-md');
+                 $('body nav').css('border-bottom-width','4px');
+                 $('#nav-brand').remove();
                  addGlobalStyle('.card-body { padding: 20px ! important; };');
                  $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
                  $('footer').removeClass('py-2').addClass('py-3')
