@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.7.7
+// @version      0.8.0
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -18,21 +18,28 @@
 
     $("#seadragon-toolbar").children().last().height('4px')
     if (window.location.href.indexOf("actapublica/matrika/detail") > -1) {
-        $('#prev-image').after($('#next-image'))
+        $('#prev-image').after($('#next-image')) //posun šipek na matrikách
 
     }
 
-
+// click2zoom => dblClick2zoom
 unsafeWindow.g_viewer.gestureSettingsMouse.clickToZoom = false
-unsafeWindow.g_viewer.gestureSettingsMouse.dblClickToZoom = true   
+unsafeWindow.g_viewer.gestureSettingsMouse.dblClickToZoom = true
 //$(document).ready(function() {
+unsafeWindow.g_viewer.showReferenceStrip = true;
+unsafeWindow.g_viewer.referenceStripScroll = "vertical";
 
+    if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
 	// dates in header
 	var birth = $('#matrikaHeader .row div:nth-child(3) p strong').text();
 	var married = $('#matrikaHeader .row div:nth-child(4) p strong').text();
 	var died = $('#matrikaHeader .row div:nth-child(5) p strong').text();
 
-	$('.card-header .nav').append(`<li class="nav-item pl-5">
+	var ibirth = $('#matrikaHeader .row div:nth-child(3) p:last-child').text();
+	var imarried = $('#matrikaHeader .row div:nth-child(4) p:last-child ').text();
+	var idied = $('#matrikaHeader .row div:nth-child(5) p:last-child ').text();
+
+/*	$('.card-header .nav').append(`<li class="nav-item pl-5">
 					<ul class="nav">
 					  <li class="nav-item px-3">
 					    <span class="small font-italic">Narození od-do</span><br>
@@ -47,7 +54,63 @@ unsafeWindow.g_viewer.gestureSettingsMouse.dblClickToZoom = true
 					    <span class="font-weight-bolder">`+died+`</span>
 					  </li>
 					</ul>
+				      </li>`);*/
+
+
+	$('.card-header .nav').append(`<li class="nav-item pl-5">
+					<ul class="nav">
+                      <li class="nav-item pt-2 pl-3">
+					    <span class="align-middle" style="font-size:1.5rem">N</span><br>
+					  </li>
+					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
+					    <span class="font-weight-bolder">`+birth+`</span><br>
+					    <span class="small font-italic">`+ibirth+`</span>
+					  </li>
+                      <li class="nav-item pt-2 pl-3">
+					    <span class="align-middle" style="font-size:1.5rem">O</span><br>
+					  </li>
+					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
+					    <span class="font-weight-bolder">`+married+`</span><br>
+					    <span class="small font-italic">`+imarried+`</span>
+					  </li>
+                       <li class="nav-item pt-2 pl-3">
+					    <span class="align-middle" style="font-size:1.5rem">Z</span><br>
+					  </li>
+					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
+					    <span class="font-weight-bolder">`+died+`</span><br>
+					    <span class="small font-italic">`+idied+`</span>
+					  </li>
+					</ul>
 				      </li>`);
+
+          }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
+             let hamburger = makeHamburger();
+            $("main .container-fluid .card .card-body").first().attr('id','scitaniHeader').addClass('collapse');
+            $(".card-header").empty().prepend(hamburger);
+	var city = $('main div .card .collapse .row div:nth-child(1) p strong').text();
+	var nubers = $('main div .card .collapse .row div:nth-child(2) p ').first().text();
+	var year = $('main div .card .collapse .row:nth-child(2) div:nth-child(3) p ').first().text();
+              console.log($('main div .card .collapse .row div:nth-child(2) p').first().text());
+         $('.card-header').append('<ul id="header-nav" class="nav" style="font-size: 60%;"></ul>');
+         $('#header-nav').append(hamburger);
+         $('#header-nav').append(`
+					  <li class="nav-item px-3 " style="">
+					    <span class="small font-italic">Město/obec</span><br>
+					    <span class="font-weight-bolder">`+city+`</span>
+					  </li>
+					  <li class="nav-item px-3 " style="">
+					    <span class="small font-italic">Číslo popisné od-do</span><br>
+					    <span class="font-weight-bolder">`+nubers+`</span>
+					  </li>
+					  <li class="nav-item px-3 " style="">
+					    <span class="small font-italic">Rok sčítání</span><br>
+					    <span class="font-weight-bolder">`+year+`</span>
+					  </li>
+				      `);
+        };
+
+
+
 
 
 
@@ -212,11 +275,42 @@ GM.getValue( "compact", false ).then(value => {
           });
 	  };
 
+ //reference strip
+    let inpStrip = makeInput("reference_strip", "Referenční pás", false )
+
+    divSettings.append(makeSettingSpacer());
+    divSettings.append(inpStrip);
+GM.getValue( "reference_strip", false ).then(value => {
+    inpStrip.firstChild.checked = value;
+    if(value){//TRUE
+       unsafeWindow.g_viewer.addReferenceStrip();
+    }else{//FALSE
+       unsafeWindow.g_viewer.removeReferenceStrip();
+    };
+});
+
+	  inpStrip.firstChild.onclick = () => {
+          GM.getValue( "reference_strip", false ).then(value => {
+              if(value == true){
+                  GM.setValue("reference_strip", false);
+                  inpStrip.firstChild.checked = false;
+                  unsafeWindow.g_viewer.removeReferenceStrip();
+                  console.log('Referenční pás =', false);
+              }else{
+                  GM.setValue("reference_strip", true);
+                  inpStrip.firstChild.checked = true;
+                  unsafeWindow.g_viewer.addReferenceStrip();
+                  console.log('Referenční pás =', true);
+              }
+          });
+	  };
 
 
 
 
 
+
+	// normalize
 	// normalize
     $("#full-page").empty().append('<i class="fas fa-expand"></i>');
     $("#step-10-forward").hide();
@@ -236,9 +330,7 @@ GM.getValue( "compact", false ).then(value => {
             $("#prev-image").empty().append('<i class="fas fa-angle-double-left"></i>');
             $("#next-image").empty().append('<i class="fas fa-angle-double-right"></i>');
             $("#full-page").empty().append('<i class="fas fa-expand"></i>');
-            let hamburger = makeHamburger();
-            $("main .container-fluid .card .card-body").first().attr('id','scitaniHeader').addClass('collapse');
-            $(".card-header").prepend(hamburger);
+
 
         	//preserve button
         let btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon() );
@@ -302,7 +394,7 @@ function makeInput(id, title, def, array=false){
                if(value == true){
                    array[i].style.display = "";
                }else{
-                   array[i].style.display = "none"
+                   array[i].style.display = "none";
                }
            }
     });
@@ -356,8 +448,11 @@ function compacted(bool){
 
 function layoutCompact(){
         if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light .container-md .row .col a img').attr('style','height: 40px')
-                  $('body .bg-light .container-md .row .col:nth-child(2) div:nth-child(2)').hide()
+                  $('body .bg-light').hide();
+                  $('body nav div').first().removeClass('container-md').addClass('container-fluid');
+                  $('body nav').prepend("<a class='navbar-brand px-2' id='nav-brand' href='https://www.mza.cz/actapublica/' style='color:#66380B; background-color:white;'>ACTA PUBLICA</a>");
+                  $('#search').attr('title','Vyhledávání').html('<i class="fas fa-search"></i>');
+                  $('main div div div .nav .navbar-text').hide();
                   addGlobalStyle(`.card-body { padding: 4px !important; };`);
                   $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
                   $('footer .container-md .mt-2').hide();
@@ -367,7 +462,10 @@ function layoutCompact(){
                   $('.input-group-prepend').hide()
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
-                  $('body .container-md a img').attr('style','height: 40px')
+                  $('body .navbar-light').hide();
+                  $('body nav div').first().removeClass('container-md').addClass('container-fluid');
+                  $('body nav').css('border-bottom-width','0px');
+                  $('body nav').prepend("<a class='navbar-brand px-2' id='nav-brand' href='https://www.mza.cz/scitacioperaty/' style='color:#0B3152; background-color:white;'>Sčítací operáty</a>");
                   addGlobalStyle('.card-body { padding: 4px ! important; };');
                   $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
                  $('footer').removeClass('py-3').addClass('py-2')
@@ -379,8 +477,11 @@ function layoutCompact(){
 
 function layoutNormal(){
         if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light .container-md .row .col a img').attr('style','height: 80px')
-                  $('body .bg-light .container-md .row .col:nth-child(2) div:nth-child(2)').show()
+                  $('body .bg-light').show();
+                  $('body nav div').first().removeClass('container-fluid').addClass('container-md');
+                  $('#nav-brand').remove();
+                  $('#search').attr('title','').html('<i class="fas fa-search"></i>&nbsp;Vyhledávání');
+                  $('main div div div .nav .navbar-text').show();
                   addGlobalStyle(`.card-body { padding: 20px !important; };`);
                   $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
                   $('footer .container-md .mt-2').show();
@@ -390,7 +491,10 @@ function layoutNormal(){
                  $('.input-group-prepend').show()
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
-                 $('body .container-md a img').attr('style','height: 50px')
+                 $('body .navbar-light').show();
+                 $('body nav div').first().removeClass('container-fluid').addClass('container-md');
+                 $('body nav').css('border-bottom-width','4px');
+                 $('#nav-brand').remove();
                  addGlobalStyle('.card-body { padding: 20px ! important; };');
                  $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
                  $('footer').removeClass('py-2').addClass('py-3')
