@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.7.8
+// @version      0.7.7
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -444,22 +444,26 @@ function compacted(bool){
     }else{//FALSE
        layoutNormal()
     };
+
 };
 
 function layoutCompact(){
         if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light').hide();
-                  $('body nav div').first().removeClass('container-md').addClass('container-fluid');
-                  $('body nav').prepend("<a class='navbar-brand px-2' id='nav-brand' href='https://www.mza.cz/actapublica/' style='color:#66380B; background-color:white;'>ACTA PUBLICA</a>");
+                  //$('body .bg-light').hide();
+                  //$('body nav div').first().removeClass('container-md').addClass('container-fluid');
+                  //$('body nav').prepend("<a class='navbar-brand px-2' id='nav-brand' href='https://www.mza.cz/actapublica/' style='color:#66380B; background-color:white;'>ACTA PUBLICA</a>");
+                  $('.navbar-brand').first().hide();
                   $('#search').attr('title','Vyhledávání').html('<i class="fas fa-search"></i>');
-                  $('main div div div .nav .navbar-text').hide();
-                  addGlobalStyle(`.card-body { padding: 4px !important; };`);
+                  $('#matrika-header .nav .navbar-text').hide();
+                  //$('main div div div .nav .navbar-text').hide();
+                  //addGlobalStyle(`.card-body { padding: 4px !important; };`);
                   $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
-                  $('footer .container-md .mt-2').hide();
-                  $('footer').removeClass('py-3').addClass('py-2')
+                  //$('footer .container-md .mt-2').hide();
+                  //$('footer').removeClass('py-3').addClass('py-2')
+                  $('footer').hide();
                   addGlobalStyle(`.card-header { padding: 4px 16px  4px 16px !important; };`);
-                  addGlobalStyle(`td { padding: 6px 12px  6px 12px !important; };`);
-                  $('.input-group-prepend').hide()
+                  //addGlobalStyle(`td { padding: 6px 12px  6px 12px !important; };`);
+                  //$('.input-group-prepend').hide()
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
                   $('body .navbar-light').hide();
@@ -477,18 +481,21 @@ function layoutCompact(){
 
 function layoutNormal(){
         if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light').show();
-                  $('body nav div').first().removeClass('container-fluid').addClass('container-md');
-                  $('#nav-brand').remove();
+                  //$('body .bg-light').show();
+                  //$('body nav div').first().removeClass('container-fluid').addClass('container-md');
+                  //$('#nav-brand').remove();
+                  $('.navbar-brand').first().show();
                   $('#search').attr('title','').html('<i class="fas fa-search"></i>&nbsp;Vyhledávání');
-                  $('main div div div .nav .navbar-text').show();
-                  addGlobalStyle(`.card-body { padding: 20px !important; };`);
+                  $('#matrika-header .nav .navbar-text').show();
+                  //$('main div div div .nav .navbar-text').show();
+                  //addGlobalStyle(`.card-body { padding: 20px !important; };`);
                   $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
-                  $('footer .container-md .mt-2').show();
-                  $('footer').removeClass('py-2').addClass('py-3')
+                  //$('footer .container-md .mt-2').show();
+                  //$('footer').removeClass('py-2').addClass('py-3')
+                   $('footer').show();
                   addGlobalStyle(`.card-header { padding: 12px 20px  12px 20px !important; };`);
-                  addGlobalStyle(`td { padding: 12px 12px  12px 12px !important; };`);
-                 $('.input-group-prepend').show()
+                  //addGlobalStyle(`td { padding: 12px 12px  12px 12px !important; };`);
+                 //$('.input-group-prepend').show()
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
                  $('body .navbar-light').show();
