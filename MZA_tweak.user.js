@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.8.1
+// @version      0.8.3
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -31,57 +31,15 @@ unsafeWindow.g_viewer.referenceStripScroll = "vertical";
 
     if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
 	// dates in header
-	var birth = $('#matrikaHeader .row div:nth-child(3) p strong').text();
-	var married = $('#matrikaHeader .row div:nth-child(4) p strong').text();
-	var died = $('#matrikaHeader .row div:nth-child(5) p strong').text();
+	var birth = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) span').text();
+	var married = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) span').text();
+	var died = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(3) span').text();
 
-	var ibirth = $('#matrikaHeader .row div:nth-child(3) p:last-child').text();
-	var imarried = $('#matrikaHeader .row div:nth-child(4) p:last-child ').text();
-	var idied = $('#matrikaHeader .row div:nth-child(5) p:last-child ').text();
-
-/*	$('.card-header .nav').append(`<li class="nav-item pl-5">
-					<ul class="nav">
-					  <li class="nav-item px-3">
-					    <span class="small font-italic">Narození od-do</span><br>
-					    <span class="font-weight-bolder">`+birth+`</span>
-					  </li>
-					  <li class="nav-item px-3">
-					    <span class="small font-italic">Oddaní od-do</span><br>
-					    <span class="font-weight-bolder">`+married+`</span>
-					  </li>
-					  <li class="nav-item px-3">
-					    <span class="small font-italic">Zemřelí od-do</span><br>
-					    <span class="font-weight-bolder">`+died+`</span>
-					  </li>
-					</ul>
-				      </li>`);*/
+	var ibirth = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(4) span').text();
+	var imarried = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(5) span ').text();
+	var idied = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(6) span ').text();
 
 
-	$('.card-header .nav').append(`<li class="nav-item pl-5">
-					<ul class="nav">
-                      <li class="nav-item pt-2 pl-3">
-					    <span class="align-middle" style="font-size:1.5rem">N</span><br>
-					  </li>
-					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
-					    <span class="font-weight-bolder">`+birth+`</span><br>
-					    <span class="small font-italic">`+ibirth+`</span>
-					  </li>
-                      <li class="nav-item pt-2 pl-3">
-					    <span class="align-middle" style="font-size:1.5rem">O</span><br>
-					  </li>
-					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
-					    <span class="font-weight-bolder">`+married+`</span><br>
-					    <span class="small font-italic">`+imarried+`</span>
-					  </li>
-                       <li class="nav-item pt-2 pl-3">
-					    <span class="align-middle" style="font-size:1.5rem">Z</span><br>
-					  </li>
-					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
-					    <span class="font-weight-bolder">`+died+`</span><br>
-					    <span class="small font-italic">`+idied+`</span>
-					  </li>
-					</ul>
-				      </li>`);
 
           }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
              let hamburger = makeHamburger();
@@ -124,7 +82,7 @@ unsafeWindow.g_viewer.referenceStripScroll = "vertical";
 
 	btnDezoomify.onclick = () => {
 		var dezoomify_url = unsafeWindow.g_viewer.tileSources[unsafeWindow.g_viewer.currentPage()];
-		console.log("DZI: "+dezoomify_url);
+        console.log("DZI: "+dezoomify_url);
 		dezoomify_url = "https://dezoomify.rasasak.cz/#"+dezoomify_url;
 		window.open(dezoomify_url, '_blank');
 	};
@@ -133,14 +91,25 @@ unsafeWindow.g_viewer.referenceStripScroll = "vertical";
 
     //setting button
     let btnSettings = makeButton('settings','Nastavení','fas fa-cog')
-    toolbar.after(btnSettings);
+
 
     //setting
     let divSettings = document.createElement('div');
     divSettings.setAttribute('class','form-check');
     divSettings.setAttribute('style','background-color:white;');
-    divSettings.style.display = "none";
+    divSettings.classList.add("pt-2");
+
+     if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
+    $('#adjustImagePanel').append(divSettings);
+         divSettings.style.display = "";
+     }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
+         toolbar.after(btnSettings);
     $('#seadragon-toolbar').append(divSettings);
+    divSettings.style.display = "none";
+      };
+
+
+
 
   	 btnSettings.onclick = () => {
 		 if(divSettings.style.display == "none"){
@@ -156,6 +125,11 @@ unsafeWindow.g_viewer.referenceStripScroll = "vertical";
 GM.getValue( "compact", false ).then(value => {
     inpCompact.firstChild.checked = value;
     compacted(value)
+    if(value){
+        updateMySeadragonHeight()
+    }else{
+        updateSeadragonHeight()
+    };
 });
 
 	  inpCompact.firstChild.onclick = () => {
@@ -441,25 +415,60 @@ function addGlobalStyle(css) {
 function compacted(bool){
     if(bool){//TRUE
        layoutCompact()
+        prepareMySeadragonHeight()
     }else{//FALSE
        layoutNormal()
+        prepareSeadragonHeight()
     };
+
 };
 
 function layoutCompact(){
         if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light').hide();
-                  $('body nav div').first().removeClass('container-md').addClass('container-fluid');
-                  $('body nav').prepend("<a class='navbar-brand px-2' id='nav-brand' href='https://www.mza.cz/actapublica/' style='color:#66380B; background-color:white;'>ACTA PUBLICA</a>");
+                  $('.navbar-brand').first().hide();
                   $('#search').attr('title','Vyhledávání').html('<i class="fas fa-search"></i>');
-                  $('main div div div .nav .navbar-text').hide();
-                  addGlobalStyle(`.card-body { padding: 4px !important; };`);
+                  $('#matrika-header .nav .navbar-text').hide();
                   $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
-                  $('footer .container-md .mt-2').hide();
-                  $('footer').removeClass('py-3').addClass('py-2')
-                  addGlobalStyle(`.card-header { padding: 4px 16px  4px 16px !important; };`);
-                  addGlobalStyle(`td { padding: 6px 12px  6px 12px !important; };`);
-                  $('.input-group-prepend').hide()
+                  $('footer').hide();
+                  let backurl = $('#matrika-header ul .mt-1 .nav li:nth-child(4)').children().attr('href')
+                   backurl = backurl.split('/').pop()
+                  $('#matrika-header .nav').first().prepend( $('#matrika-header ul .mt-1 .nav li:nth-child(4)') )
+
+                  $('#navbarCollapse ul').first().append( $('#matrika-header ul .mt-1').last() )
+                  $('#navbarCollapse ul .mt-1 .nav li:nth-child(1)').addClass('ml-5 mr-2').removeClass('mr-3').children().addClass('btn-sm').text('Snímky')
+            $('#navbarCollapse ul .mt-1 .nav li:nth-child(1)').children().attr("onclick","setTimeout(updateMySeadragonHeight, 1)");
+                  $('#navbarCollapse ul .mt-1 .nav li:nth-child(2)').addClass('mr-2').removeClass('mr-3').children().addClass('btn-sm').text('Podrobnosti')
+                  let parts = $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').text()
+                  parts = parts.match(/\((.*)\)/);
+                  $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').addClass('btn-sm').text('Části '+parts[0])
+
+            $('#matrika-header .nav').first().append(`<li id="date-indexes" class="nav-item pl-3">
+					<ul class="nav">
+                      <li class="nav-item pt-2 pl-3">
+					    <span class="align-middle" style="font-size:1.5rem">N</span><br>
+					  </li>
+					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
+					    <span class="font-weight-bolder">`+birth+`</span><br>
+					    <span class="small font-italic">`+ibirth+`</span>
+					  </li>
+                      <li class="nav-item pt-2 pl-3">
+					    <span class="align-middle" style="font-size:1.5rem">O</span><br>
+					  </li>
+					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
+					    <span class="font-weight-bolder">`+married+`</span><br>
+					    <span class="small font-italic">`+imarried+`</span>
+					  </li>
+                       <li class="nav-item pt-2 pl-3">
+					    <span class="align-middle" style="font-size:1.5rem">Z</span><br>
+					  </li>
+					  <li class="nav-item pl-2 pr-3" style="min-width: 80px;">
+					    <span class="font-weight-bolder">`+died+`</span><br>
+					    <span class="small font-italic">`+idied+`</span>
+					  </li>
+					</ul>
+				      </li>`);
+            $('#matrika-header .nav:nth-child(2)').hide();
+$('#matrika-header .nav .nav-item:nth-child(1) a').attr('href','/actapublica/matrika/'+backurl)
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
                   $('body .navbar-light').hide();
@@ -477,18 +486,26 @@ function layoutCompact(){
 
 function layoutNormal(){
         if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-                  $('body .bg-light').show();
-                  $('body nav div').first().removeClass('container-fluid').addClass('container-md');
-                  $('#nav-brand').remove();
+                             $('#date-indexes').remove()
+            $('#matrika-header .nav:nth-child(2)').show();
+                  $('.navbar-brand').first().show();
                   $('#search').attr('title','').html('<i class="fas fa-search"></i>&nbsp;Vyhledávání');
-                  $('main div div div .nav .navbar-text').show();
-                  addGlobalStyle(`.card-body { padding: 20px !important; };`);
+                  $('#matrika-header .nav .navbar-text').show();
                   $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
-                  $('footer .container-md .mt-2').show();
-                  $('footer').removeClass('py-2').addClass('py-3')
-                  addGlobalStyle(`.card-header { padding: 12px 20px  12px 20px !important; };`);
-                  addGlobalStyle(`td { padding: 12px 12px  12px 12px !important; };`);
-                 $('.input-group-prepend').show()
+                   $('footer').show();
+
+                  $('#navbarCollapse ul .mt-1 .nav li:nth-child(1)').removeClass('ml-5 mr-2').addClass('mr-3').children().removeClass('btn-sm').text('Digitalizované stránky')
+                  $('#navbarCollapse ul .mt-1 .nav li:nth-child(1)').children().attr("onclick","setTimeout(updateSeadragonHeight, 1)");
+                  $('#navbarCollapse ul .mt-1 .nav li:nth-child(2)').removeClass('mr-2').addClass('mr-3').children().removeClass('btn-sm').text('Podrobnosti o matrice')
+                  let parts = $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').text()
+                  parts = parts.match(/\((.*)\)/);
+                  $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').removeClass('btn-sm').text('Části matriky '+parts[0])
+                  $('#matrika-header ul').first().append( $('#navbarCollapse .mt-1') )
+$('#matrika-header .nav .mt-1 .nav').append( $('#matrika-header ul li').first() )
+                  let backurl = $('#matrika-header ul .mt-1 .nav li:nth-child(4) a').attr('href')
+                  backurl = backurl.split('/').pop()
+                  $('#matrika-header ul .mt-1 .nav li:nth-child(4) a').attr('href','/actapublica/matrika/'+backurl)
+
 
         }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
                  $('body .navbar-light').show();
@@ -522,3 +539,55 @@ function makeHamburger(){
 
 }
 
+
+
+
+
+
+
+
+function updateMySeadragonHeight(round = 1)
+{
+	if (unsafeWindow.g_viewer.isFullPage()) {
+		//fullscreen mode
+		return;
+	}
+
+	var toolbarHeight = $("#seadragon-toolbar").outerHeight(true);
+	if (toolbarHeight == 0 && round <= 8) {
+		//asi prepinani tabu, chvilku pockam...
+		//console.log("waiting " + round);
+		setTimeout(function() { updateMySeadragonHeight(round + 1); }, 50 * round);
+	}
+
+	var height = $(window).height() - $("#header").outerHeight(true) - $("#matrika-header").outerHeight(true) - $("#matrika-pripinacky").outerHeight(true) - $("#seadragon-toolbar").outerHeight(true);
+
+/*
+	console.log(
+		"window: " + $(window).outerHeight(true) +
+		", header: " + $("#header").outerHeight(true) +
+		", matrika-header: " + $("#matrika-header").outerHeight(true) +
+		", matrika-pripinacky: " + $("#matrika-pripinacky").outerHeight(true) +
+		", seadragon-toolbar: " + $("#seadragon-toolbar").outerHeight(true) +
+		", footer: " + $("#footer").innerHeight());
+	console.log("Height: " + height);
+*/
+
+	//vyska ale musi byt aspon 200px
+	height = Math.max(height, 200);
+
+	$('#openseadragon').css({ 'height': height + 'px' });
+}
+
+/**
+ * Nastaveni handleru, aby se Vyska SeaDragonu prizpusobovala vysce okna
+ */
+function prepareMySeadragonHeight()
+{
+	$(window).resize(updateMySeadragonHeight);
+	updateMySeadragonHeight();
+}
+
+        if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
+            updateMySeadragonHeight();
+        };
