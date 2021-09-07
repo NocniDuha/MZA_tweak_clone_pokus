@@ -75,7 +75,7 @@ g.referenceStripScroll = "vertical";
 	  let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
 
-	  //dezoomify button
+	//dezoomify button
     let btnDezoomify = makeButton('dezoomify','Stáhnout (Dezoomify)','fas fa-cloud-download-alt');
     toolbar.after(btnDezoomify);
 
@@ -98,25 +98,23 @@ g.referenceStripScroll = "vertical";
     divSettings.setAttribute('style','background-color:white;');
     divSettings.classList.add("pt-2");
 
-     if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
-    $('#adjustImagePanel').append(divSettings);
-         divSettings.style.display = "";
-     }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
-         toolbar.after(btnSettings);
-    $('#seadragon-toolbar').append(divSettings);
-    divSettings.style.display = "none";
-      };
-
-
+     if(actaPublica){
+        $('#adjustImagePanel').append(divSettings);
+        divSettings.style.display = "";
+     }else if(scitaciOperaty){
+        toolbar.after(btnSettings);
+        $('#seadragon-toolbar').append(divSettings);
+        divSettings.style.display = "none";
+     };
 
 
   	 btnSettings.onclick = () => {
 		 if(divSettings.style.display == "none"){
-      divSettings.style.display = ""
-     }else{
-       divSettings.style.display = "none"
-     }
-	  };
+          divSettings.style.display = ""
+         }else{
+          divSettings.style.display = "none"
+         }
+	 };
 
        //kompaktni rezim
     let inpCompact = makeInput("compact", "Kompaktní režim", false)
@@ -150,10 +148,10 @@ GM.getValue( "compact", false ).then(value => {
 
 
     //minimap
-     if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
-    let inpMinimap = makeInput("minimapa", "Minimapa", false, [g.navigator.element])
+     if (scitaciOperaty) {
+        let inpMinimap = makeInput("minimapa", "Minimapa", false, [g.navigator.element])
         divSettings.append(makeSettingSpacer());
-    divSettings.append(inpMinimap);
+        divSettings.append(inpMinimap);
 
  	  inpMinimap.firstChild.onclick = () => {
           GM.getValue( "minimapa", "false" ).then(value => {
@@ -419,7 +417,7 @@ function compacted(bool){
 };
 
 function layoutCompact(){
-        if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
+        if(actaPublica){
                   $('.navbar-brand').first().hide();
                   $('#search').attr('title','Vyhledávání').html('<i class="fas fa-search"></i>');
                   $('#matrika-header .nav .navbar-text').hide();
@@ -470,7 +468,7 @@ $('#matrika-header .nav .nav-item:nth-child(1) a').attr('href','/actapublica/mat
             $('#matrika-pripinacky button').addClass('btn-sm')
             $('#seadragon-toolbar').removeClass('pt-2 pb-2').addClass('pt-1 pb-1')
 
-        }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
+        }else if(scitaciOperaty){
                   $('body .navbar-light').hide();
                   $('body nav div').first().removeClass('container-md').addClass('container-fluid');
                   $('body nav').css('border-bottom-width','0px');
@@ -485,7 +483,7 @@ $('#matrika-header .nav .nav-item:nth-child(1) a').attr('href','/actapublica/mat
 
 
 function layoutNormal(){
-        if(window.location.href.indexOf("actapublica/matrika/detail") > -1){
+        if(actaPublica){
                              $('#date-indexes').remove()
             $('#matrika-header .nav:nth-child(2)').show();
                   $('.navbar-brand').first().show();
@@ -510,7 +508,7 @@ $('#matrika-header .nav .mt-1 .nav').append( $('#matrika-header ul li').first() 
                   $('#matrika-pripinacky button').removeClass('btn-sm')
                   $('#seadragon-toolbar').removeClass('pt-1 pb-1').addClass('pt-2 pb-2')
 
-        }else if(window.location.href.indexOf("scitacioperaty/digisada/detail") > -1){
+        }else if(scitaciOperaty){
                  $('body .navbar-light').show();
                  $('body nav div').first().removeClass('container-fluid').addClass('container-md');
                  $('body nav').css('border-bottom-width','4px');
@@ -600,7 +598,7 @@ function exec(fn) {
     script.setAttribute("type", "application/javascript");
     script.textContent = '(' + fn + ')();';
     document.body.appendChild(script); // run the script
-    //document.body.removeChild(script); // clean up
+    document.body.removeChild(script); // clean up
 }
 
 
