@@ -283,8 +283,8 @@ GM.getValue( "reference_strip", false ).then(value => {
     $("#step-10-forward").hide();
     $("#step-10-backward").hide();
     $("#plus25").after($("#last-image"));
-	if (window.location.href.indexOf("scitacioperaty/digisada/detail") > -1) {
-          $('.nav-pills').prepend(`<li class="nav-item">
+	if (scitaciOperaty) {
+            $('.nav-pills').prepend(`<li class="nav-item">
 				        <a class="nav-link" href="https://www.mza.cz/scitacioperaty/digisada/search">
                                             <i class="fas fa-arrow-circle-left"></i> Zpět na vyhledávání
                                         </a>
@@ -300,8 +300,8 @@ GM.getValue( "reference_strip", false ).then(value => {
 
 
         	//preserve button
-        let btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon() );
-        $("#dezoomify").after(btnPreserve);
+            let btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon() );
+            $("#dezoomify").after(btnPreserve);
 
         btnPreserve.onclick = () => {
             if (g.preserveViewport == false){
@@ -467,6 +467,8 @@ $('#matrika-header .nav .nav-item:nth-child(1) a').attr('href','/actapublica/mat
             $('#matrika-pripinacky').removeClass('pt-2').addClass('pt-1')
             $('#matrika-pripinacky button').addClass('btn-sm')
             $('#seadragon-toolbar').removeClass('pt-2 pb-2').addClass('pt-1 pb-1')
+            $('#navbarCollapse .navbar-nav .nav-item:nth-child(4) a').attr('title','Nápověda').empty().append('<i class="fas fa-question-circle fa-sm"></i>')
+            $('#navbarCollapse .navbar-nav .nav-item:nth-child(5) a').attr('title','Kontaktní formulář').empty().append('<i class="fas fa-envelope fa-sm"></i>')
 
         }else if(scitaciOperaty){
                   $('body .navbar-light').hide();
@@ -507,6 +509,8 @@ $('#matrika-header .nav .mt-1 .nav').append( $('#matrika-header ul li').first() 
                   $('#matrika-pripinacky').removeClass('pt-1').addClass('pt-2')
                   $('#matrika-pripinacky button').removeClass('btn-sm')
                   $('#seadragon-toolbar').removeClass('pt-1 pb-1').addClass('pt-2 pb-2')
+             $('#navbarCollapse .navbar-nav .nav-item:nth-child(4) a').attr('title','').empty().append('Nápověda')
+            $('#navbarCollapse .navbar-nav .nav-item:nth-child(5) a').attr('title','').empty().append('<i class="fas fa-envelope fa-sm"></i>&nbsp;Kontaktní formulář')
 
         }else if(scitaciOperaty){
                  $('body .navbar-light').show();
