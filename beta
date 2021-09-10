@@ -8,7 +8,7 @@
 // @match        https://www.mza.cz/actapublica/matrika/detail/*
 // @match        https://www.mza.cz/scitacioperaty/digisada/*
 // @icon         https://www.mza.cz/actapublica/assets/favicon/android-chrome-192x192.png
-// @require      http://code.jquery.com/jquery-latest.js
+// @require      https://code.jquery.com/jquery-3.6.0.slim.min.js
 // @grant        unsafeWindow
 // @grant        GM.setValue
 // @grant        GM.getValue
@@ -36,9 +36,20 @@ g.referenceStripScroll = "vertical";
 
 
 if (actaPublica) {
+    console.time('javascript')
     var birth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) span').textContent;
     var married = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) span').textContent;
     var died = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(3) span').textContent;
+    console.timeEnd('javascript')
+console.log(birth)
+    console.time('jquery')
+    var birth1 = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) span').text();
+    var married1 = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) span').text();
+    var died1 = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(3) span').text();
+    console.timeEnd('jquery')
+console.log(birth1)
+
+
     // indexes in header
     var ibirth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(4) span').textContent;
     var imarried = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(5) span ').textContent;
@@ -48,8 +59,7 @@ if (actaPublica) {
 if (scitaciOperaty) {
     let hamburger = makeHamburger();
     $("main .container-fluid .card .card-body").first().attr('id', 'scitaniHeader').addClass('collapse');
-   // $(".card-header").empty().prepend(hamburger);
-    d.querySelector('.card-header').removeChild()
+    $(".card-header").empty().prepend(hamburger);
     var city = d.querySelector('#scitaniHeader .row div:nth-child(1) p strong').textContent;
     var numbers = d.querySelector('#scitaniHeader .row div:nth-child(2) p ').textContent;
     var year = d.querySelector('#scitaniHeader .row:nth-child(2) div:nth-child(3) p ').textContent;
