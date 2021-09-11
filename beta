@@ -6,7 +6,7 @@
 // @description  Malá vylepšení pro web MZA...
 // @author       Rasasak
 // @match        https://www.mza.cz/actapublica/matrika/detail/*
-// @match        https://www.mza.cz/scitacioperaty/digisada/*
+// @match        https://www.mza.cz/scitacioperaty/digisada/detail/*
 // @icon         https://www.mza.cz/actapublica/assets/favicon/android-chrome-192x192.png
 // @require      https://code.jquery.com/jquery-3.6.0.slim.min.js
 // @grant        unsafeWindow
@@ -20,12 +20,6 @@ var actaPublica = window.location.href.indexOf("actapublica/matrika/detail") > -
 var scitaciOperaty = window.location.href.indexOf("scitacioperaty/digisada/detail") > -1;
 
 
-$("#seadragon-toolbar").children().last().height('4px')
-if (window.location.href.indexOf("actapublica/matrika/detail") > -1) {
-    $('#prev-image').after($('#next-image')) //posun šipek na matrikách
-
-}
-
 // click2zoom => dblClick2zoom
 g.gestureSettingsMouse.clickToZoom = false
 g.gestureSettingsMouse.dblClickToZoom = true
@@ -36,36 +30,28 @@ g.referenceStripScroll = "vertical";
 
 
 if (actaPublica) {
-    console.time('javascript')
+    // dates in header
     var birth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) span').textContent;
     var married = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) span').textContent;
     var died = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(3) span').textContent;
-    console.timeEnd('javascript')
-console.log(birth)
-    console.time('jquery')
-    var birth1 = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) span').text();
-    var married1 = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) span').text();
-    var died1 = $('#matrika-header .nav:nth-child(2) .nav-item:nth-child(3) span').text();
-    console.timeEnd('jquery')
-console.log(birth1)
-
-
     // indexes in header
     var ibirth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(4) span').textContent;
     var imarried = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(5) span ').textContent;
     var idied = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(6) span ').textContent;
+
+    $('#prev-image').after($('#next-image')) //posun šipek na matrikách
 }
 
 if (scitaciOperaty) {
-    let hamburger = makeHamburger();
-    $("main .container-fluid .card .card-body").first().attr('id', 'scitaniHeader').addClass('collapse');
-    $(".card-header").empty().prepend(hamburger);
+    $("main .container-fluid .card .card-body").first().attr('id', 'scitaniHeader').hide();
+    $(".card-header").empty();
     var city = d.querySelector('#scitaniHeader .row div:nth-child(1) p strong').textContent;
     var numbers = d.querySelector('#scitaniHeader .row div:nth-child(2) p ').textContent;
+    var archive = d.querySelector('#scitaniHeader .row div:nth-child(3) p ').textContent;
     var year = d.querySelector('#scitaniHeader .row:nth-child(2) div:nth-child(3) p ').textContent;
 
+
     $('.card-header').append('<ul id="header-nav" class="nav" style="font-size: 60%;"></ul>');
-    $('#header-nav').append(hamburger);
     $('#header-nav').append(`
 					  <li class="nav-item px-3 " style="">
 					    <span class="small font-italic">Město/obec</span><br>
@@ -79,6 +65,10 @@ if (scitaciOperaty) {
 					    <span class="small font-italic">Rok sčítání</span><br>
 					    <span class="font-weight-bolder">`+ year + `</span>
 					  </li>
+					  <li class="nav-item px-3 " style="">
+					    <span class="small font-italic">Archiv</span><br>
+					    <span class="font-weight-bolder">`+ archive + `</span>
+					  </li>
 				      `);
 };
 
@@ -86,10 +76,59 @@ if (scitaciOperaty) {
 //toolbar for buttons
 let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
+//buttons/////////////////////////////////////////////////////////////////////////////////////////////
+var btnMinus25 = makeButtonText('minus25', '-25 snímků', '-25');
+var btnMinus10 = makeButtonText('minusTen', '-10 snímků', '-10');
+var btnMinus1 = makeButton('minus1', 'Předchozí snímek', 'fas fa-angle-left');
+var btnPlus1 = makeButton('plus1', 'Další snímek', 'fas fa-angle-right');
+var btnPlus10 = makeButtonText('plusTen', '+10 snímků', '+10');
+var btnPlus25 = makeButtonText('plus25', '+25 snímků', '+25');
+var btnDezoomify = makeButton('dezoomify', 'Stáhnout (Dezoomify)', 'fas fa-cloud-download-alt');
 
-//dezoomify button
-let btnDezoomify = makeButton('dezoomify', 'Stáhnout (Dezoomify)', 'fas fa-cloud-download-alt');
+$('#prev-image').before(btnMinus25);
+$('#prev-image').before(btnMinus10);
+$('#prev-image').after(btnMinus1);
+$('#next-image').before(btnPlus1);
+$('#next-image').after(btnPlus10);
+$(btnPlus10).after(btnPlus25);
 toolbar.after(btnDezoomify);
+
+btnMinus25.onclick = () => {
+    var idx = g.currentPage() - 25;
+	g.goToPage(Math.max(idx, 0));
+    updateNavigationButtons()
+};
+
+btnMinus10.onclick = () => {
+    var idx = g.currentPage() - 10;
+	g.goToPage(Math.max(idx, 0));
+    updateNavigationButtons()
+};
+
+btnMinus1.onclick = () => {
+    var idx = g.currentPage() - 1;
+	g.goToPage(Math.max(idx, 0));
+    updateNavigationButtons()
+};
+
+btnPlus1.onclick = () => {
+	let idx = g.currentPage() + 1;
+	g.goToPage(Math.min(idx, g.tileSources.length - 1));
+    updateNavigationButtons()
+};
+
+
+btnPlus10.onclick = () => {
+	let idx = g.currentPage() + 10;
+	g.goToPage(Math.min(idx, g.tileSources.length - 1));
+    updateNavigationButtons()
+};
+
+btnPlus25.onclick = () => {
+	let idx = g.currentPage() + 25;
+	g.goToPage(Math.min(idx, g.tileSources.length - 1));
+    updateNavigationButtons()
+};
 
 btnDezoomify.onclick = () => {
     let dezoomify_url = g.tileSources[g.currentPage()];
@@ -98,39 +137,88 @@ btnDezoomify.onclick = () => {
     window.open(dezoomify_url, '_blank');
 };
 
+if (scitaciOperaty) {
+    var btnFirst    = makeButton("first-image", "První snímek", "fas fa-step-backward");
+        btnFirst.classList.add("ml-3");
+    var btnLast     = makeButton("last-image", "Poslední snímek", "fas fa-step-forward");
+        btnLast.classList.add("mr-3");
+    var btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon());
+    var btnMinimap  = makeButton("btn_minimap", "Zobrazovat navigaci po obrázku", checkMinimapIcon() )
+    var btnSettings = makeButton("adjust-image", "Úprava zobrazení (jas, kontrast)", "fas fa-sliders-h");
+        btnSettings.setAttribute("data-toggle","collapse");
+        btnSettings.setAttribute("data-target","#adjustImagePanel")
 
+    btnMinus25.before(btnFirst);
+    btnPlus25.after(btnLast);
+    btnDezoomify.after(btnPreserve);
+    btnPreserve.after(btnMinimap)
+    btnMinimap.after(btnSettings);
 
-//setting button
-let btnSettings = makeButton('settings', 'Nastavení', 'fas fa-cog')
+    btnFirst.onclick = () => {
+        g.goToPage(0)
+        updateNavigationButtons()
+    };
 
+    btnLast.onclick = () => {
+        g.goToPage(g.tileSources.length - 1)
+        updateNavigationButtons()
+    };
+    g.navigator.element.style.display = "none";
+    btnMinimap.onclick = () => {
+        GM.getValue("minimapa", "false").then(value => {
+            if (value == true) {
+                GM.setValue("minimapa", false);
+                btnMinimap.firstChild.setAttribute("class","far fa-compass");
+                g.navigator.element.style.display = "none";
+                console.log('Minimapa =', false);
+            } else {
+                GM.setValue("minimapa", true);
+                btnMinimap.firstChild.setAttribute("class","fas fa-compass");
+                g.navigator.element.style.display = "";
+                console.log('Minimapa =', true);
+            }
+        });
+    };
 
-//setting
-let divSettings = document.createElement('div');
-divSettings.setAttribute('class', 'form-check');
-divSettings.setAttribute('style', 'background-color:white;');
-divSettings.classList.add("pt-2");
+    btnPreserve.onclick = () => {
+        toggleNavigator()
+        if (g.preserveViewport == false) {
+            g.preserveViewport = true
+            btnPreserve.firstChild.setAttribute('class', 'fas fa-lock')
+        } else {
+            g.preserveViewport = false
+            btnPreserve.firstChild.setAttribute('class', 'fas fa-unlock')
+        }
+        console.log('Preserve = ' + g.preserveViewport)
+    };
 
-if (actaPublica) {
-    $('#adjustImagePanel').append(divSettings);
-    divSettings.style.display = "";
-} else if (scitaciOperaty) {
-    toolbar.after(btnSettings);
-    $('#seadragon-toolbar').append(divSettings);
-    divSettings.style.display = "none";
 };
 
 
-btnSettings.onclick = () => {
-    if (divSettings.style.display == "none") {
-        divSettings.style.display = ""
-    } else {
-        divSettings.style.display = "none"
-    }
-};
 
-//kompaktni rezim
-let inpCompact = makeInput("compact", "Kompaktní režim", false)
+
+
+
+//setting div
+var divSettings = document.createElement('div');
+    divSettings.setAttribute('class', 'form-check');
+    divSettings.classList.add("pt-2");
+
+//INPUTS////////////////////////////////////////////////////////////////
+var inpCompact = makeInput("compact", "Kompaktní režim", false)
+var inpNav10 = makeInput("navigace10", "+/- 10", true, [btnPlus10, btnMinus10])
+var inpNav25 = makeInput("navigace25", "+/- 25", false, [btnPlus25, btnMinus25])
+var inpStrip = makeInput("reference_strip", "Referenční pás", false)
+
+
 divSettings.append(inpCompact);
+divSettings.append(makeSettingSpacer());
+divSettings.append(inpNav10);
+divSettings.append(makeSettingSpacer());
+divSettings.append(inpNav25);
+divSettings.append(makeSettingSpacer());
+divSettings.append(inpStrip);
+
 GM.getValue("compact", false).then(value => {
     inpCompact.firstChild.checked = value;
     compacted(value)
@@ -138,6 +226,15 @@ GM.getValue("compact", false).then(value => {
         updateMySeadragonHeight()
     } else {
         updateSeadragonHeight()
+    };
+});
+
+GM.getValue("reference_strip", false).then(value => {
+    inpStrip.firstChild.checked = value;
+    if (value) {//TRUE
+        g.addReferenceStrip();
+    } else {//FALSE
+        g.removeReferenceStrip();
     };
 });
 
@@ -158,64 +255,6 @@ inpCompact.firstChild.onclick = () => {
 };
 
 
-
-//minimap
-if (scitaciOperaty) {
-    let inpMinimap = makeInput("minimapa", "Minimapa", false, [g.navigator.element])
-    divSettings.append(makeSettingSpacer());
-    divSettings.append(inpMinimap);
-
-    inpMinimap.firstChild.onclick = () => {
-        GM.getValue("minimapa", "false").then(value => {
-            if (value == true) {
-                GM.setValue("minimapa", false);
-                inpMinimap.firstChild.checked = false;
-                g.navigator.element.style.display = "none";
-                console.log('Minimapa =', false);
-            } else {
-                GM.setValue("minimapa", true);
-                inpMinimap.firstChild.checked = true;
-                g.navigator.element.style.display = "";
-                console.log('Minimapa =', true);
-            }
-        });
-    };
-};
-
-//navigation
-let btnPlus10 = makeButtonText('plusTen', '+10 snímků', '+10');
-let btnMinus10 = makeButtonText('minusTen', '-10 snímků', '-10');
-let btnPlus25 = makeButtonText('plus25', '+25 snímků', '+25');
-let btnMinus25 = makeButtonText('minus25', '-25 snímků', '-25');
-
-$('#next-image').after(btnPlus25);
-btnPlus25.onclick = () => {
-    g.goToPage(g.currentPage() + 25)
-};
-
-$('#prev-image').before(btnMinus25);
-btnMinus25.onclick = () => {
-    g.goToPage(g.currentPage() - 25)
-};
-
-$('#next-image').after(btnPlus10);
-btnPlus10.onclick = () => {
-    g.goToPage(g.currentPage() + 10)
-};
-
-$('#prev-image').before(btnMinus10);
-btnMinus10.onclick = () => {
-    g.goToPage(g.currentPage() - 10)
-};
-
-
-
-let inpNav10 = makeInput("navigace10", "+/- 10", true, [btnPlus10, btnMinus10])
-
-divSettings.append(makeSettingSpacer());
-divSettings.append(inpNav10);
-
-
 inpNav10.firstChild.onclick = () => {
     GM.getValue("navigace10", true).then(value => {
         if (value == true) {
@@ -233,11 +272,6 @@ inpNav10.firstChild.onclick = () => {
         }
     });
 };
-
-let inpNav25 = makeInput("navigace25", "+/- 25", false, [btnPlus25, btnMinus25])
-
-divSettings.append(makeSettingSpacer());
-divSettings.append(inpNav25);
 
 
 inpNav25.firstChild.onclick = () => {
@@ -258,20 +292,6 @@ inpNav25.firstChild.onclick = () => {
     });
 };
 
-//reference strip
-let inpStrip = makeInput("reference_strip", "Referenční pás", false)
-
-divSettings.append(makeSettingSpacer());
-divSettings.append(inpStrip);
-GM.getValue("reference_strip", false).then(value => {
-    inpStrip.firstChild.checked = value;
-    if (value) {//TRUE
-        g.addReferenceStrip();
-    } else {//FALSE
-        g.removeReferenceStrip();
-    };
-});
-
 inpStrip.firstChild.onclick = () => {
     GM.getValue("reference_strip", false).then(value => {
         if (value == true) {
@@ -291,6 +311,8 @@ inpStrip.firstChild.onclick = () => {
 
 
 // normalize
+$("#prev-image").hide();
+$("#next-image").hide();
 $("#full-page").empty().append('<i class="fas fa-expand"></i>');
 $("#step-10-forward").hide();
 $("#step-10-backward").hide();
@@ -311,29 +333,31 @@ if (scitaciOperaty) {
     $("#full-page").empty().append('<i class="fas fa-expand"></i>');
 
 
-    //preserve button
-    let btnPreserve = makeButton('preserve', 'Zachovat zoom a polohu', checkPreserveIcon());
-    $("#dezoomify").after(btnPreserve);
+    // setting button
 
-    btnPreserve.onclick = () => {
-        if (g.preserveViewport == false) {
-            g.preserveViewport = true
-            btnPreserve.firstChild.setAttribute('class', 'fas fa-lock')
-        } else {
-            g.preserveViewport = false
-            btnPreserve.firstChild.setAttribute('class', 'fas fa-unlock')
-        }
-        console.log('Preserve = ' + g.preserveViewport)
-    };
 
+
+    $(btnSettings).after(`<div class="collapse" id="adjustImagePanel" style="position: absolute; top: 100%; background: white; border: 1px solid black; margin: 1em; padding: 1em; z-index: 9999; width: 500px;">
+		               <span>Jas</span>
+		               <input id="brightness-control" type="range" class="custom-range" min="0" max="200" onchange="setBrightness(this.value);" oninput="setBrightness(this.value);">
+		               <span>Kontrast</span>
+		               <input id="contrast-control" type="range" class="custom-range" min="0" max="200" onchange="setContrast(this.value);" oninput="setContrast(this.value);">
+		               <button type="button" class="btn btn-outline-secondary mr-2" title="Vrátit výchozí nastavení" onclick="adjustImage(true);">Výchozí nastavení</button>
+		               <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('adjust-image').click();">Zavřít</button>
+                       </div>`)
 
 }
 
 //});
 
 
+    $('#adjustImagePanel').append(divSettings);
+
+
+
+
 function makeButton(id, title, icon) {
-    let btn = document.createElement('a');
+    let btn = document.createElement('button');
     btn.setAttribute('id', id);
     btn.setAttribute('type', 'button');
     btn.setAttribute('class', 'btn btn-light mr-1');
@@ -348,7 +372,7 @@ function makeButton(id, title, icon) {
 }
 
 function makeButtonText(id, title, text,) {
-    let btn = document.createElement('a');
+    let btn = document.createElement('button');
     btn.setAttribute('id', id);
     btn.setAttribute('type', 'button');
     btn.setAttribute('class', 'btn btn-light mr-1');
@@ -371,7 +395,7 @@ function makeInput(id, title, def, array = false) {
             inp.checked = value;
             for (var i = 0; i < array.length; i++) {
                 if (value == true) {
-                    array[i].style.display = "";
+                    array[i].style.display = "inline-block";
                 } else {
                     array[i].style.display = "none";
                 }
@@ -397,6 +421,17 @@ function checkPreserveIcon() {
         return 'fas fa-lock';
     };
 }
+
+function checkMinimapIcon(){
+        if( g.navigator.element.style.display.includes("none")){
+            return 'fas fa-compass';
+        }else{
+            return 'far fa-compass'
+        }
+
+}
+
+
 
 function makeSettingSpacer() {
     let spc = document.createElement('div');
@@ -540,24 +575,6 @@ function layoutNormal() {
     };
 }
 
-function makeHamburger() {
-    let btn = document.createElement('button');
-    btn.setAttribute('class', 'btn btn-primary collapsed');
-    btn.setAttribute('type', 'button');
-    btn.setAttribute('data-toggle', 'collapse');
-    btn.setAttribute('data-target', '#scitaniHeader');
-    btn.setAttribute('aria-expanded', 'false');
-    btn.setAttribute('aria-controls', 'scitaniHeader');
-    btn.setAttribute('title', 'Zobrazit základní informace o digitalizační sadě');
-
-    let icn = document.createElement('i');
-    icn.setAttribute('class', 'fas fa-bars');
-
-    btn.append(icn);
-    return btn;
-
-}
-
 
 
 function updateMySeadragonHeight(round = 1) {
@@ -620,3 +637,77 @@ exec(function () {
     })
 });
 
+
+
+
+var script = document.createElement('script');
+script.setAttribute("type", "text/javascript");
+script.textContent = `
+function updateNavigationButtons()
+{
+	var firstPage = g_viewer.currentPage() == 0;
+	var lastPage = g_viewer.currentPage() == g_viewer.tileSources.length - 1;
+
+	document.getElementById('first-image').disabled = firstPage;
+	document.getElementById('first-image').style.opacity = firstPage ? 0.2 : 'initial';
+	document.getElementById('minus1').disabled = firstPage;
+	document.getElementById('minus1').style.opacity = firstPage ? 0.2 : 'initial';
+	document.getElementById('minusTen').disabled = firstPage;
+	document.getElementById('minusTen').style.opacity = firstPage ? 0.2 : 'initial';
+    document.getElementById('minus25').disabled = firstPage;
+	document.getElementById('minus25').style.opacity = firstPage ? 0.2 : 'initial';
+	document.getElementById('last-image').disabled = lastPage;
+	document.getElementById('last-image').style.opacity = lastPage ? 0.2 : 'initial';
+	document.getElementById('plus1').disabled = lastPage;
+	document.getElementById('plus1').style.opacity = lastPage ? 0.2 : 'initial';
+	document.getElementById('plusTen').disabled = lastPage;
+	document.getElementById('plusTen').style.opacity = lastPage ? 0.2 : 'initial';
+	document.getElementById('plus25').disabled = lastPage;
+	document.getElementById('plus25').style.opacity = lastPage ? 0.2 : 'initial';
+}
+updateNavigationButtons()
+`
+document.body.appendChild(  script  );
+
+
+
+
+if(scitaciOperaty){
+var script1 = document.createElement('script');
+script1.setAttribute("type", "text/javascript");
+script1.textContent = `
+
+
+var brightness = 100;
+var contrast = 100;
+
+function setBrightness(value)
+{
+	brightness = value;
+	adjustImage(false);
+}
+
+function setContrast(value)
+{
+	contrast = value;
+	adjustImage(false);
+}
+
+function adjustImage(reset)
+{
+	if (reset) {
+		document.getElementById('brightness-control').value = 100;
+		document.getElementById('contrast-control').value = 100;
+		brightness = 100;
+		contrast = 100;
+	}
+
+	document.getElementById('openseadragon').style.filter = 'brightness(' + brightness + '%) contrast(' + contrast + '%)';
+
+
+
+}
+`
+document.body.appendChild(  script1  );
+
+}
