@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.8.4
+// @version      0.8.5
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -609,3 +609,9 @@ exec(function() {
     })
 });
 
+$.fn.immediateText = function() {
+    return this.contents().not(this.children()).text();
+};
+
+var puvodce = $('.table tbody tr:nth-child(4) td:nth-child(2)').first().immediateText().trim()
+console.log( $('.table tbody tr:nth-child(4) td:nth-child(2)').first().contents().eq(0).wrap("<a href='https://www.mza.cz/actapublica/matrika/hledani_puvodce?typ_puvodce_id=&search_by_puvodce="+puvodce+"'></a>")  )
