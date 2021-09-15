@@ -711,3 +711,6 @@ function adjustImage(reset)
 document.body.appendChild(  script1  );
 
 }
+
+var puvodce = $('.table tbody tr:nth-child(4) td:nth-child(2)').first().immediateText().trim()
+console.log( $('.table tbody tr:nth-child(4) td:nth-child(2)').first().contents().eq(0).wrap("<a href='https://www.mza.cz/actapublica/matrika/hledani_puvodce?typ_puvodce_id=&search_by_puvodce="+puvodce+"'></a>")  )
