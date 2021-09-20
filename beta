@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.8.4
+// @version      0.8.6
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -31,13 +31,13 @@ g.referenceStripScroll = "vertical";
 
 if (actaPublica) {
     // dates in header
-    var birth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) span').textContent;
-    var married = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) span').textContent;
-    var died = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(3) span').textContent;
+    var birth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) .nav .nav-item:nth-child(1) span').textContent;
+    var married = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) .nav .nav-item:nth-child(2) span').textContent;
+    var died = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) .nav .nav-item:nth-child(3) span').textContent;
     // indexes in header
-    var ibirth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(4) span').textContent;
-    var imarried = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(5) span ').textContent;
-    var idied = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(6) span ').textContent;
+    var ibirth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(1) span').textContent;
+    var imarried = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(2) span ').textContent;
+    var idied = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(3) span ').textContent;
 
     $('#prev-image').after($('#next-image')) //posun šipek na matrikách
 }
@@ -181,7 +181,7 @@ if (scitaciOperaty) {
     };
 
     btnPreserve.onclick = () => {
-        toggleNavigator()
+        //toggleNavigator()
         if (g.preserveViewport == false) {
             g.preserveViewport = true
             btnPreserve.firstChild.setAttribute('class', 'fas fa-lock')
@@ -711,10 +711,11 @@ function adjustImage(reset)
 document.body.appendChild(  script1  );
 
 }
-
+/*
 $.fn.immediateText = function() {
     return this.contents().not(this.children()).text();
 };
 
 var puvodce = $('.table tbody tr:nth-child(4) td:nth-child(2)').first().immediateText().trim()
 console.log( $('.table tbody tr:nth-child(4) td:nth-child(2)').first().contents().eq(0).wrap("<a href='https://www.mza.cz/actapublica/matrika/hledani_puvodce?typ_puvodce_id=&search_by_puvodce="+puvodce+"'></a>")  )
+*/
