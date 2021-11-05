@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.8.6
+// @version      0.8.8
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -13,6 +13,33 @@
 // @grant        GM.setValue
 // @grant        GM.getValue
 // ==/UserScript==
+
+ addGlobalStyle(`
+
+
+/* width */
+#matrika-pripinacky::-webkit-scrollbar {
+  height: 3px;
+}
+
+/* Track */
+#matrika-pripinacky::-webkit-scrollbar-track {
+  background: #532e09;
+}
+
+/* Handle */
+#matrika-pripinacky::-webkit-scrollbar-thumb {
+  background: #f1f1f1;
+}
+
+/* Handle on hover */
+#matrika-pripinacky::-webkit-scrollbar-thumb:hover {
+  background: #d9d9d9;
+}
+`);
+
+
+
 
 var g = unsafeWindow.g_viewer;
 var d = document;
@@ -466,7 +493,6 @@ function compacted(bool) {
 function layoutCompact() {
     if (actaPublica) {
         $('.navbar-brand').first().hide();
-        $('#search').attr('title', 'Vyhledávání').html('<i class="fas fa-search"></i>');
         $('#matrika-header .nav .navbar-text').hide();
         $('nav').removeClass('py-2 px-3').addClass('py-0 px-2');
         $('#seadragon-toolbar .form-group .input-group .input-group-prepend').hide()
@@ -476,13 +502,13 @@ function layoutCompact() {
         $('#matrika-header .nav').first().prepend($('#matrika-header ul .mt-1 .nav li:nth-child(4)'))
 
         $('#navbarCollapse ul').first().append($('#matrika-header ul .mt-1').last())
-        $('#navbarCollapse ul .mt-1 .nav li:nth-child(1)').addClass('ml-5 mr-2').removeClass('mr-3').children().addClass('btn-sm').text('Snímky')
+        $('#navbarCollapse ul .mt-1 .nav li:nth-child(1)').addClass('ml-4 mr-2').removeClass('mr-3').children().addClass('btn-sm').text('Snímky')
         $('#navbarCollapse ul .mt-1 .nav li:nth-child(1)').children().attr("onclick", "setTimeout(updateMySeadragonHeight, 1)");
         $('#navbarCollapse ul .mt-1 .nav li:nth-child(2)').addClass('mr-2').removeClass('mr-3').children().addClass('btn-sm').text('Podrobnosti')
         let parts = $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').text()
         parts = parts.match(/\((.*)\)/);
         $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').addClass('btn-sm').text('Části ' + parts[0])
-
+        $('#navbarCollapse ul .mt-1 ').removeClass('nav-item')
         $('#matrika-header .nav').first().append(`<li id="date-indexes" class="nav-item pl-3">
 					<ul class="nav">
                       <li class="nav-item pt-2 pl-3">
@@ -514,8 +540,17 @@ function layoutCompact() {
         $('#matrika-pripinacky').removeClass('pt-2').addClass('pt-1')
         $('#matrika-pripinacky button').addClass('btn-sm')
         $('#seadragon-toolbar').removeClass('pt-2 pb-2').addClass('pt-1 pb-1')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(4) a').attr('title', 'Nápověda').empty().append('<i class="fas fa-question-circle fa-sm"></i>')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(5) a').attr('title', 'Kontaktní formulář').empty().append('<i class="fas fa-envelope fa-sm"></i>')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(1) a').first().attr('title', 'Vyhledávání').empty().append('<i class="mx-1 fas fa-fw fa-search fa-sm"></i>');
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(2) a').first().hide();
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(3) a').first().attr('title', 'Aktuality').empty().append('<i class="fas fa-fw fa-rss fa-sm"></i>')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(4) a').first().attr('title', 'Dokumenty').empty().append('<i class="fas fa-fw fa-book fa-sm"></i>')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(5) a').first().attr('title', 'Nápověda').empty().append('<i class="fas fa-fw fa-question-circle fa-sm"></i>')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(6) a').first().attr('title', 'Kontaktní formulář').empty().append('<i class="fas fa-fw fa-envelope fa-sm"></i>')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(7) a').first().attr('title', 'Záložky').empty().append('<i class="fas fa-fw fa-bookmark fa-sm"></i>')
+
+        $('#navbarCollapse .navbar-nav').first().append( $('#matrika-pripinacky').addClass('ml-4') )
+        $("#matrika-pripinacky button").removeClass('btn-outline-success').addClass('btn-outline-warning')
+        $("#matrika-pripinacky").css({ "overflow-x": "auto","overflow-y": "hidden","width": "300px","white-space": "nowrap" })
 
     }
     if (scitaciOperaty) {
@@ -537,7 +572,6 @@ function layoutNormal() {
         $('#date-indexes').remove()
         $('#matrika-header .nav:nth-child(2)').show();
         $('.navbar-brand').first().show();
-        $('#search').attr('title', '').html('<i class="fas fa-search"></i>&nbsp;Vyhledávání');
         $('#matrika-header .nav .navbar-text').show();
         $('nav').removeClass('py-0 px-2').addClass('py-2 px-3');
         $('#seadragon-toolbar .form-group .input-group .input-group-prepend').show()
@@ -557,8 +591,17 @@ function layoutNormal() {
         $('#matrika-pripinacky').removeClass('pt-1').addClass('pt-2')
         $('#matrika-pripinacky button').removeClass('btn-sm')
         $('#seadragon-toolbar').removeClass('pt-1 pb-1').addClass('pt-2 pb-2')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(4) a').attr('title', '').empty().append('Nápověda')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(5) a').attr('title', '').empty().append('<i class="fas fa-envelope fa-sm"></i>&nbsp;Kontaktní formulář')
+
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(1) a').first().attr('title', '').empty().append('<i class="fas fa-search"></i>&nbsp;Vyhledávání')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(2) a').first().show();
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(3) a').first().attr('title', '').empty().append('Aktuality')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(4) a').first().attr('title', '').empty().append('Dokumenty')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(5) a').first().attr('title', '').empty().append('Nápověda')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(6) a').first().attr('title', '').empty().append('<i class="fas fa-envelope fa-sm"></i>&nbsp;Kontaktní formulář')
+        $('#navbarCollapse .navbar-nav .nav-item:nth-child(7) a').first().attr('title', '').empty().append('Záložky')
+
+        $('#pill_images').first().prepend( $('#matrika-pripinacky').removeClass('ml-4') )
+        $("#matrika-pripinacky button").removeClass('btn-outline-warning').addClass('btn-outline-success')
 
     }
     if (scitaciOperaty) {
@@ -590,7 +633,8 @@ function updateMySeadragonHeight(round = 1) {
         setTimeout(function () { updateMySeadragonHeight(round + 1); }, 50 * round);
     }
 
-    var height = $(window).height() - $("#header").outerHeight(true) - $("#matrika-header").outerHeight(true) - $("#matrika-pripinacky").outerHeight(true) - $("#seadragon-toolbar").outerHeight(true);
+    //var height = $(window).height() - $("#header").outerHeight(true) - $("#matrika-header").outerHeight(true) - $("#matrika-pripinacky").outerHeight(true) - $("#seadragon-toolbar").outerHeight(true);
+    var height = $(window).height() - $("#header").outerHeight(true) - $("#matrika-header").outerHeight(true) - $("#seadragon-toolbar").outerHeight(true);
 
     /*
         console.log(
@@ -631,10 +675,8 @@ function exec(fn) {
 
 
 exec(function () {
-    $('[data-toggle="popover"]').popover('dispose');
-    $('[data-toggle="popover"]').popover({
-        trigger: 'hover click'
-    })
+    $('[data-toggle="popover"]').popover('dispose').popover({trigger: 'hover click'})
+    $('[data-toggle="tooltip"]').tooltip('dispose').tooltip({boundary: 'window'})
 });
 
 
