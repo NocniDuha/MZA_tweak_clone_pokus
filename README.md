@@ -4,11 +4,12 @@
 ![Greasemonkey](https://img.shields.io/badge/Greasemonkey-%E2%9C%93-green)
 ### User script pro facelift MZA 
 
-- Odstraňuje "minimapu" z náhledu dokumentu *(actapublica + sčítací operáty)*
+- Kompaktní režim *(actapublica + sčítací operáty)*
+- ~~Odstraňuje "minimapu" z náhledu dokumentu~~ *(actapublica + sčítací operáty)* *MZA již okopírovalo :)*
 - Výpis letopočtů do záhlaví dokumentu. *(actapublica)*
 - Tlačítko na stažení skrze [Dezoomify](https://dezoomify.ophir.dev/dezoomify/dezoomify.html) *(actapublica + sčítací operáty)*
-- Tlačítko na zamknutí zoomu a polohy *(actapublica + sčítací operáty)*
-- možnost listování po 1 nebo po 10 stránkách *(actapublica + sčítací operáty)*
+- ~~Tlačítko na zamknutí zoomu a polohy *(actapublica + sčítací operáty)*~~ *MZA již okopírovalo :)*
+- možnost listování po 1, 10 nebo 25 stránkách *(actapublica + sčítací operáty)*
 - tlačítko nastavení pro vypínání nékterých funkcí
 
 ### Instalace
