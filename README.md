@@ -17,3 +17,9 @@
 - Otevřít [tento odkaz](https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js) na MZA_tweak
 - kliknout na INSTALOVAT
 
+#### PŘED:
+![pred](https://user-images.githubusercontent.com/28921659/144753849-a09521e6-9eca-4616-b7c9-4e7451078011.png)
+
+#### PO: 
+![po](https://user-images.githubusercontent.com/28921659/144753850-683861ad-fa01-432d-a353-5078730cc5d2.png
+
