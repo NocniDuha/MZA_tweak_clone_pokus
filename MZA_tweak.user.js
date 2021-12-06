@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.0
+// @version      0.9.1
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -40,6 +40,27 @@ if (actaPublica) {
     var imarried = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(2) span ').textContent;
     var idied = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(3) span ').textContent;
 
+
+
+    addGlobalStyle('#matrika-pripinacky .dropdown:hover>.dropdown-menu {display: block;');
+    addGlobalStyle('#matrika-pripinacky .dropdown>.dropdown-toggle:active {pointer-events: none;}');
+    addGlobalStyle('#matrika-pripinacky .dropdown .dropdown-menu > a:hover {background-color:#28A745; color:white; cursor: pointer;}');
+    addGlobalStyle('#matrika-pripinacky .dropdown .dropdown-menu {max-height: 480px;overflow-y: auto;}');
+    var pripinacky=""
+    $("#matrika-pripinacky button").each(function(index,element) {
+                            pripinacky += `<a class="dropdown-item" onclick="`+$(this).attr("onclick")+`"><i class="fas fa-fw fa-sm fa-thumbtack"></i> `+$(this).data("original-title").replace('Část matriky: ','')+`</a>`
+                            });
+    $("#matrika-pripinacky").prepend(`<div class="dropdown" style="display:none;">
+                                     <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" >
+                                     <i class="fas fa-thumbtack"></i>
+                                     </button>
+                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="border-color: #28A745; margin-top: -1px">
+                                     `+pripinacky+`
+                                     </div>
+                                     </div>`)
+
+
+
 }
 
 //toolbar for buttons
@@ -64,7 +85,7 @@ toolbar.after(btnDezoomify);
 
 btnMinus25.onclick = () => {
     var idx = g.currentPage() - 25;
-	g.goToPage(Math.max(idx, 0));
+	g.goToPage(Math.max(idx, 0));D
     updateNavigationButtons()
 };
 
@@ -114,11 +135,16 @@ var divSettings = document.createElement('div');
     divSettings.setAttribute('class', 'form-check');
     divSettings.classList.add("pt-2");
 
+var divSettings2 = document.createElement('div');
+    divSettings.setAttribute('class', 'form-check');
+    divSettings.classList.add("pt-2");
+
 //INPUTS////////////////////////////////////////////////////////////////
 var inpCompact = makeInput("compact", "Kompaktní režim", false)
 var inpNav10 = makeInput("navigace10", "+/- 10", true, [btnPlus10, btnMinus10])
 var inpNav25 = makeInput("navigace25", "+/- 25", false, [btnPlus25, btnMinus25])
 var inpStrip = makeInput("reference_strip", "Referenční pás", false)
+var inpPins = makeInput("dropdown_pin", "Seskupené připínáčky" ,false)
 
 
 divSettings.append(inpCompact);
@@ -128,6 +154,8 @@ divSettings.append(makeSettingSpacer());
 divSettings.append(inpNav25);
 divSettings.append(makeSettingSpacer());
 divSettings.append(inpStrip);
+
+divSettings2.append(inpPins);
 
 GM.getValue("compact", false).then(value => {
     inpCompact.firstChild.checked = value;
@@ -147,6 +175,20 @@ GM.getValue("reference_strip", false).then(value => {
         g.removeReferenceStrip();
     };
 });
+
+
+    GM.getValue("dropdown_pin", false).then(value => {
+        inpPins.firstChild.checked = value;
+        if (value == true) {
+            $("#matrika-pripinacky>.dropdown").attr('style','display:inline-block !important');
+            $("#matrika-pripinacky>button").hide()
+        } else {
+            $("#matrika-pripinacky>.dropdown").attr('style','display:none !important');
+            $("#matrika-pripinacky>button").show()
+        }
+    });
+
+
 
 inpCompact.firstChild.onclick = () => {
     GM.getValue("compact", false).then(value => {
@@ -218,6 +260,24 @@ inpStrip.firstChild.onclick = () => {
     });
 };
 
+inpPins.firstChild.onclick = () => {
+    GM.getValue("dropdown_pin", false).then(value => {
+        if (value == true) {
+            GM.setValue("dropdown_pin", false);
+            inpPins.firstChild.checked = false;
+            $("#matrika-pripinacky>.dropdown").attr('style','display:none !important');
+            $("#matrika-pripinacky>button").show()
+            console.log('Seskupené připínáčky =', false);
+        } else {
+            GM.setValue("dropdown_pin", true);
+            inpPins.firstChild.checked = true;
+            $("#matrika-pripinacky>.dropdown").attr('style','display:inline-block !important');
+            $("#matrika-pripinacky>button").hide()
+            console.log('Seskupené připínáčky =', true);
+        }
+    });
+};
+
 
 
 // normalize
@@ -232,7 +292,11 @@ $("#plus25").after($("#last-image"));
 //});
 
     $('#adjustImagePanel').append(divSettings);
+    $('#adjustImagePanel').append(divSettings2);
 
+if(scitaciOperaty){
+   inpPins.style.display="none"
+}
 
 
 function makeButton(id, title, icon) {
@@ -301,6 +365,7 @@ function makeSettingSpacer() {
     spc.append("|")
     return spc
 }
+
 
 
 
@@ -387,6 +452,19 @@ function layoutCompact() {
         $('#navbarCollapse .navbar-nav').first().append( $('#matrika-pripinacky').addClass('ml-4') )
         $("#matrika-pripinacky button").removeClass('btn-outline-success').addClass('btn-outline-warning')
 
+        //pripinacky
+        $("#matrika-pripinacky .dropdown .dropdown-menu").css('border-color', '#FFC107')
+        $("#matrika-pripinacky .dropdown .dropdown-menu .dropdown-item").hover(
+            function () {
+                $(this).css("background-color", "#FFC107");
+                $(this).css("color", "#000000");
+            },
+            function () {
+                $(this).css("background-color", "#FFFFFF");
+                $(this).css("color", "#000000");
+            }
+        );
+
     }
     if (scitaciOperaty) {
         $('.navbar-brand').eq(1).css('font-size','1.25rem');  //zmeva velikosti pisma SCITACI OPERATY
@@ -451,6 +529,19 @@ function layoutNormal() {
 
         $('#pill_images').first().prepend( $('#matrika-pripinacky').removeClass('ml-4') )
         $("#matrika-pripinacky button").removeClass('btn-outline-warning').addClass('btn-outline-success')
+
+        //pripinacky:
+        $("#matrika-pripinacky .dropdown .dropdown-menu").css('border-color', '#28A745')
+        $("#matrika-pripinacky .dropdown .dropdown-menu .dropdown-item").hover(
+            function () {
+                $(this).css("background-color", "#28A745");
+                $(this).css("color", "#FFFFFF");
+            },
+            function () {
+                $(this).css("background-color", "#FFFFFF");
+                $(this).css("color", "#000000");
+            }
+        );
 
     }
     if (scitaciOperaty) {
@@ -580,4 +671,6 @@ function updateNavigationButtons()
 updateNavigationButtons()
 `
 document.body.appendChild(  script  );
+
+
 
