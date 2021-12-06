@@ -10,6 +10,7 @@
 - Tlačítko na stažení skrze [Dezoomify](https://dezoomify.ophir.dev/dezoomify/dezoomify.html) *(actapublica + sčítací operáty)*
 - ~~Tlačítko na zamknutí zoomu a polohy *(actapublica + sčítací operáty)*~~ *MZA již okopírovalo :)*
 - možnost listování po 1, 10 nebo 25 stránkách *(actapublica + sčítací operáty)*
+- možnost seskupení špendlíku se záložkami
 - tlačítko nastavení pro vypínání nékterých funkcí
 
 ### Instalace
