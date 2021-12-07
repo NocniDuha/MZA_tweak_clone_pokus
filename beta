@@ -30,6 +30,7 @@ g.referenceStripScroll = "vertical";
 
 $('#prev-image').after($('#next-image')) //posun šipek na matrikách
 
+
 if (actaPublica) {
     // dates in header
     var birth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(1) .nav .nav-item:nth-child(1) span').textContent;
@@ -40,24 +41,6 @@ if (actaPublica) {
     var imarried = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(2) span ').textContent;
     var idied = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(3) span ').textContent;
 
-
-
-    addGlobalStyle('#matrika-pripinacky .dropdown:hover>.dropdown-menu {display: block;');
-    addGlobalStyle('#matrika-pripinacky .dropdown>.dropdown-toggle:active {pointer-events: none;}');
-    addGlobalStyle('#matrika-pripinacky .dropdown .dropdown-menu > a:hover {background-color:#28A745; color:white; cursor: pointer;}');
-    addGlobalStyle('#matrika-pripinacky .dropdown .dropdown-menu {max-height: 480px;overflow-y: auto;}');
-    var pripinacky=""
-    $("#matrika-pripinacky button").each(function(index,element) {
-                            pripinacky += `<a class="dropdown-item" onclick="`+$(this).attr("onclick")+`"><i class="fas fa-fw fa-sm fa-thumbtack"></i> `+$(this).data("original-title").replace('Část matriky: ','')+`</a>`
-                            });
-    $("#matrika-pripinacky").prepend(`<div class="dropdown" style="display:none;">
-                                     <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" >
-                                     <i class="fas fa-thumbtack"></i>
-                                     </button>
-                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="border-color: #28A745; margin-top: -1px">
-                                     `+pripinacky+`
-                                     </div>
-                                     </div>`)
 
 
 
@@ -620,6 +603,11 @@ function prepareMySeadragonHeight() {
     updateMySeadragonHeight();
 }
 
+function prepareSeadragonHeight()
+{
+	$(window).resize(updateSeadragonHeight);
+	updateSeadragonHeight();
+}
 
 
 //injection popover hover
@@ -673,4 +661,24 @@ updateNavigationButtons()
 document.body.appendChild(  script  );
 
 
+$( document ).ready(function() {
+    addGlobalStyle('#matrika-pripinacky .dropdown:hover>.dropdown-menu {display: block;');
+    addGlobalStyle('#matrika-pripinacky .dropdown>.dropdown-toggle:active {pointer-events: none;}');
+    addGlobalStyle('#matrika-pripinacky .dropdown .dropdown-menu > a:hover {background-color:#28A745; color:white; cursor: pointer;}');
+    addGlobalStyle('#matrika-pripinacky .dropdown .dropdown-menu {max-height: 480px;overflow-y: auto;}');
+    var pripinacky=""
+    console.log($("#matrika-pripinacky button").eq(1).attr("data-original-title"))
+    $("#matrika-pripinacky>button").each(function(index,element) {
+      											console.log($(this).data())
+                            pripinacky += `<a class="dropdown-item" onclick="`+$(this).attr("onclick")+`"><i class="fas fa-fw fa-sm fa-thumbtack"></i> `+$(this).attr("data-original-title").replace('Část matriky: ','')+`</a>`
+                            });
+    $("#matrika-pripinacky").prepend(`<div class="dropdown" style="display:none;">
+                                     <button class="btn btn-outline-success dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" >
+                                     <i class="fas fa-thumbtack"></i>
+                                     </button>
+                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="border-color: #28A745; margin-top: -1px">
+                                     `+pripinacky+`
+                                     </div>
+                                     </div>`)
+});
 
