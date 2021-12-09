@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.1
+// @version      0.9.2
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -13,12 +13,11 @@
 // @grant        GM.setValue
 // @grant        GM.getValue
 // ==/UserScript==
-
+$( document ).ready(function() {
 var g = unsafeWindow.g_viewer;
 var d = document;
 var actaPublica = window.location.href.indexOf("actapublica/matrika/detail") > -1;
 var scitaciOperaty = window.location.href.indexOf("scitacioperaty/digisada/detail") > -1;
-
 
 // click2zoom => dblClick2zoom
 g.gestureSettingsMouse.clickToZoom = false
@@ -28,7 +27,8 @@ g.gestureSettingsMouse.dblClickToZoom = true
 g.showReferenceStrip = true;
 g.referenceStripScroll = "vertical";
 
-$('#prev-image').after($('#next-image')) //posun šipek na matrikách
+//posun šipek do vychoziho stavu
+$('#prev-image').after($('#next-image'))
 
 if (actaPublica) {
     // dates in header
@@ -40,8 +40,7 @@ if (actaPublica) {
     var imarried = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(2) span ').textContent;
     var idied = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(3) span ').textContent;
 
-
-
+    // priprava pripinacku
     addGlobalStyle('#matrika-pripinacky .dropdown:hover>.dropdown-menu {display: block;');
     addGlobalStyle('#matrika-pripinacky .dropdown>.dropdown-toggle:active {pointer-events: none;}');
     addGlobalStyle('#matrika-pripinacky .dropdown .dropdown-menu > a:hover {background-color:#28A745; color:white; cursor: pointer;}');
@@ -58,9 +57,6 @@ if (actaPublica) {
                                      `+pripinacky+`
                                      </div>
                                      </div>`)
-
-
-
 }
 
 //toolbar for buttons
@@ -126,8 +122,6 @@ btnDezoomify.onclick = () => {
     dezoomify_url = "https://dezoomify.rasasak.cz/#" + dezoomify_url;
     window.open(dezoomify_url, '_blank');
 };
-
-
 
 
 //setting div
@@ -398,7 +392,6 @@ function layoutCompact() {
         $('#seadragon-toolbar .form-group .input-group .input-group-prepend').hide()
         $('footer').removeClass('py-3').addClass('py-2');
         let backurl = $('#matrika-header ul .mt-1 .nav li:nth-child(4)').children().attr('href')
-        backurl = backurl.split('/').pop()
         $('#matrika-header .nav').first().prepend($('#matrika-header ul .mt-1 .nav li:nth-child(4)'))
 
         $('#navbarCollapse ul').first().append($('#matrika-header ul .mt-1').last())
@@ -407,7 +400,9 @@ function layoutCompact() {
         $('#navbarCollapse ul .mt-1 .nav li:nth-child(2)').addClass('mr-2').removeClass('mr-3').children().addClass('btn-sm').text('Podrobnosti')
         let parts = $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').text()
         parts = parts.match(/\((.*)\)/);
-        $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').addClass('btn-sm').text('Části ' + parts[0])
+        if(parts){
+        	$('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').addClass('btn-sm').text('Části ' + parts[0])
+        }
         $('#navbarCollapse ul .mt-1 ').removeClass('nav-item')
         $('#matrika-header .nav').first().append(`<li id="date-indexes" class="nav-item pl-3">
 					<ul class="nav">
@@ -435,7 +430,7 @@ function layoutCompact() {
 					</ul>
 				      </li>`);
         $('#matrika-header .nav:nth-child(2)').hide();
-        $('#matrika-header .nav .nav-item:nth-child(1) a').attr('href', '/actapublica/matrika/' + backurl)
+        $('#matrika-header .nav .nav-item:nth-child(1) a').attr('href', backurl)
 
         $('#matrika-pripinacky').removeClass('pt-2').addClass('pt-1')
         $('#matrika-pripinacky button').addClass('btn-sm')
@@ -509,7 +504,9 @@ function layoutNormal() {
         $('#navbarCollapse ul .mt-1 .nav li:nth-child(2)').removeClass('mr-2').addClass('mr-3').children().removeClass('btn-sm').text('Podrobnosti o matrice')
         let parts = $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').text()
         parts = parts.match(/\((.*)\)/);
-        $('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').removeClass('btn-sm').text('Části matriky ' + parts[0])
+      	if(parts){
+        	$('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').removeClass('btn-sm').text('Části matriky ' + parts[0])
+        }
         $('#matrika-header ul').first().append($('#navbarCollapse .mt-1'))
         $('#matrika-header .nav .mt-1 .nav').append($('#matrika-header ul li').first())
         let backurl = $('#matrika-header ul .mt-1 .nav li:nth-child(4) a').attr('href')
@@ -595,6 +592,34 @@ function updateMySeadragonHeight(round = 1) {
 	   //var footerHeight = $('#footer').css('display') == 'none' ? 0 : $("#footer").innerHeight();
        var height = $(window).height() - headerHeight  - ($("main").outerHeight(true) - $("#openseadragon").outerHeight(true));
     }
+
+function updateSeadragonHeight(round = 1)
+{
+	if (g_viewer.isFullPage()) {
+		//fullscreen mode
+		return;
+	}
+
+	var toolbarHeight = $("#seadragon-toolbar").outerHeight(true);
+	if (toolbarHeight == 0 && round <= 8) {
+		//asi prepinani tabu, chvilku pockam...
+		//console.log("waiting " + round);
+		setTimeout(function() { updateSeadragonHeight(round + 1); }, 50 * round);
+	}
+
+	var headerHeight = $('#header').css('display') == 'none' ? 0 : $("#header").outerHeight(true);
+	var footerHeight = $('#footer').css('display') == 'none' ? 0 : $("#footer").innerHeight();
+
+	var height = $(window).height() - headerHeight - $("#matrika-header").outerHeight(true) - $("#matrika-pripinacky").outerHeight(true) - $("#seadragon-toolbar").outerHeight(true) - footerHeight;
+
+	//vyska ale musi byt aspon 200px
+	height = Math.max(height, 200);
+
+	$('#openseadragon').css({ 'height': height + 'px' });
+}
+
+
+
 /*
         console.log(
             "window: " + $(window).outerHeight(true) +
@@ -673,4 +698,4 @@ updateNavigationButtons()
 document.body.appendChild(  script  );
 
 
-
+});
