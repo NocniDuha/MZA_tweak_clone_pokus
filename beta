@@ -49,6 +49,8 @@ if (actaPublica) {
     var kontaktni_formular = $('#navbarCollapse .navbar-nav .nav-item:nth-child(6) a').first();
     var zalozky = $('#navbarCollapse .navbar-nav .nav-item:nth-child(7) a').first();
 
+    var matrika_text = $('#matrika-header .nav .navbar-text');
+
 if(isLogged){
      var addToBookmark = $('#matrika-pripinacky button:last-child').detach()
 }
@@ -401,7 +403,7 @@ function layoutCompact() {
     $('.navbar-brand').first().hide(); // logo skrýt
     $('nav').removeClass('py-2 px-3').addClass('py-0 px-2'); //vyska vrchniho panelu
     if (actaPublica) {
-        $('#matrika-header .nav .navbar-text').hide();
+        matrika_text.hide();
         $('#seadragon-toolbar .form-group .input-group .input-group-prepend').hide()
         $('footer').removeClass('py-3').addClass('py-2');
         $('#matrika-header .nav').first().prepend($('#matrika-header ul .mt-1 .nav li:nth-child(4)'))
@@ -508,7 +510,7 @@ function layoutNormal() {
     if (actaPublica) {
         $('#date-indexes').remove()
         $('#matrika-header .nav:nth-child(2)').show();
-        $('#matrika-header .nav .navbar-text').show();
+        matrika_text.show();
         $('#seadragon-toolbar .form-group .input-group .input-group-prepend').show()
         $('footer').removeClass('py-2').addClass('py-3');
 
