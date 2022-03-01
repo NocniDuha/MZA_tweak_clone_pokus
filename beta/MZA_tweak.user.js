@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.3b
+// @version      0.9.2
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -50,6 +50,7 @@ if (actaPublica) {
     var zalozky = $('#navbarCollapse .navbar-nav .nav-item:nth-child(7) a').first();
 
     var matrika_text = $('#matrika-header .nav .navbar-text');
+    var button_back = $('#matrika-header ul .mt-1 .nav li:nth-child(4)').detach()
 
 if(isLogged){
      var addToBookmark = $('#matrika-pripinacky button:last-child').detach()
@@ -404,9 +405,10 @@ function layoutCompact() {
     $('nav').removeClass('py-2 px-3').addClass('py-0 px-2'); //vyska vrchniho panelu
     if (actaPublica) {
         matrika_text.hide();
+        $('#matrika-header .nav').first().prepend(button_back)
+
         $('#seadragon-toolbar .form-group .input-group .input-group-prepend').hide()
         $('footer').removeClass('py-3').addClass('py-2');
-        $('#matrika-header .nav').first().prepend($('#matrika-header ul .mt-1 .nav li:nth-child(4)'))
 
         $('#navbarCollapse ul').first().append($('#matrika-header ul .mt-1').last())
         $('#navbarCollapse ul .mt-1 .nav li:nth-child(1)').addClass('ml-4 mr-2').removeClass('mr-3').children().addClass('btn-sm').text('Snímky')
@@ -511,6 +513,7 @@ function layoutNormal() {
         $('#date-indexes').remove()
         $('#matrika-header .nav:nth-child(2)').show();
         matrika_text.show();
+
         $('#seadragon-toolbar .form-group .input-group .input-group-prepend').show()
         $('footer').removeClass('py-2').addClass('py-3');
 
@@ -523,7 +526,9 @@ function layoutNormal() {
         	$('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').removeClass('btn-sm').text('Části matriky ' + parts[0])
         }
         $('#matrika-header ul').first().append($('#navbarCollapse .mt-1'))
-        $('#matrika-header .nav .mt-1 .nav').append($('#matrika-header ul li').first())
+
+        $('#matrika-header .nav .mt-1 .nav').append(button_back)
+
         //let backurl = $('#matrika-header ul .mt-1 .nav li:nth-child(4) a').attr('href')
         //backurl = backurl.split('/').pop()
         //$('#matrika-header ul .mt-1 .nav li:nth-child(4) a').attr('href', '/actapublica/matrika/' + backurl)
