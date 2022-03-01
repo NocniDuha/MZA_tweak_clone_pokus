@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.2
+// @version      0.9.3
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -18,6 +18,7 @@ var g = unsafeWindow.g_viewer;
 var d = document;
 var actaPublica = window.location.href.indexOf("actapublica/matrika/detail") > -1;
 var scitaciOperaty = window.location.href.indexOf("scitacioperaty/digisada/detail") > -1;
+var isLogged = $( "#account" ).length;
 
 // click2zoom => dblClick2zoom
 g.gestureSettingsMouse.clickToZoom = false
@@ -39,6 +40,21 @@ if (actaPublica) {
     var ibirth = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(1) span').textContent;
     var imarried = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(2) span ').textContent;
     var idied = d.querySelector('#matrika-header .nav:nth-child(2) .nav-item:nth-child(2) .nav .nav-item:nth-child(3) span ').textContent;
+
+    var vyhledavani = $('#navbarCollapse .navbar-nav .nav-item:nth-child(1) a').first();
+    var vyhledavani_dropdown = $('#navbarCollapse .navbar-nav .nav-item:nth-child(2) a').first();
+    var aktuality = $('#navbarCollapse .navbar-nav .nav-item:nth-child(3) a').first();
+    var dokumenty = $('#navbarCollapse .navbar-nav .nav-item:nth-child(4) a').first();
+    var napoveda = $('#navbarCollapse .navbar-nav .nav-item:nth-child(5) a').first();
+    var kontaktni_formular = $('#navbarCollapse .navbar-nav .nav-item:nth-child(6) a').first();
+    var zalozky = $('#navbarCollapse .navbar-nav .nav-item:nth-child(7) a').first();
+
+    var matrika_text = $('#matrika-header .nav .navbar-text');
+    var button_back = $('#matrika-header ul .mt-1 .nav li:nth-child(4)').detach()
+
+if(isLogged){
+     var addToBookmark = $('#matrika-pripinacky button:last-child').detach()
+}
 
     // priprava pripinacku
     addGlobalStyle('#matrika-pripinacky .dropdown:hover>.dropdown-menu {display: block;');
@@ -388,11 +404,11 @@ function layoutCompact() {
     $('.navbar-brand').first().hide(); // logo skrýt
     $('nav').removeClass('py-2 px-3').addClass('py-0 px-2'); //vyska vrchniho panelu
     if (actaPublica) {
-        $('#matrika-header .nav .navbar-text').hide();
+        matrika_text.hide();
+        $('#matrika-header .nav').first().prepend(button_back)
+
         $('#seadragon-toolbar .form-group .input-group .input-group-prepend').hide()
         $('footer').removeClass('py-3').addClass('py-2');
-        let backurl = $('#matrika-header ul .mt-1 .nav li:nth-child(4)').children().attr('href')
-        $('#matrika-header .nav').first().prepend($('#matrika-header ul .mt-1 .nav li:nth-child(4)'))
 
         $('#navbarCollapse ul').first().append($('#matrika-header ul .mt-1').last())
         $('#navbarCollapse ul .mt-1 .nav li:nth-child(1)').addClass('ml-4 mr-2').removeClass('mr-3').children().addClass('btn-sm').text('Snímky')
@@ -430,19 +446,17 @@ function layoutCompact() {
 					</ul>
 				      </li>`);
         $('#matrika-header .nav:nth-child(2)').hide();
-        $('#matrika-header .nav .nav-item:nth-child(1) a').attr('href', backurl)
 
         $('#matrika-pripinacky').removeClass('pt-2').addClass('pt-1')
         $('#matrika-pripinacky button').addClass('btn-sm')
         $('#seadragon-toolbar').removeClass('pt-2 pb-2').addClass('pt-1 pb-1')
         //ikony v hlavnim panelu
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(1) a').first().attr('title', 'Vyhledávání').empty().append('<i class="mx-1 fas fa-fw fa-search fa-sm"></i>');
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(2) a').first().hide();
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(3) a').first().attr('title', 'Aktuality').empty().append('<i class="fas fa-fw fa-rss fa-sm"></i>')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(4) a').first().attr('title', 'Dokumenty').empty().append('<i class="fas fa-fw fa-book fa-sm"></i>')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(5) a').first().attr('title', 'Nápověda').empty().append('<i class="fas fa-fw fa-question-circle fa-sm"></i>')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(6) a').first().attr('title', 'Kontaktní formulář').empty().append('<i class="fas fa-fw fa-envelope fa-sm"></i>')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(7) a').first().attr('title', 'Záložky').empty().append('<i class="fas fa-fw fa-bookmark fa-sm"></i>')
+        vyhledavani.attr('title', 'Vyhledávání').empty().append('<i class="mx-1 fas fa-fw fa-search fa-sm"></i>');
+        vyhledavani_dropdown.hide();
+        aktuality.attr('title', 'Aktuality').empty().append('<i class="fas fa-fw fa-rss fa-sm"></i>')
+        dokumenty.attr('title', 'Dokumenty').empty().append('<i class="fas fa-fw fa-book fa-sm"></i>')
+        napoveda.attr('title', 'Nápověda').empty().append('<i class="fas fa-fw fa-question-circle fa-sm"></i>')
+        kontaktni_formular.attr('title', 'Kontaktní formulář').empty().append('<i class="fas fa-fw fa-envelope fa-sm"></i>')
 
         $('#navbarCollapse .navbar-nav').first().append( $('#matrika-pripinacky').addClass('ml-4') )
         $("#matrika-pripinacky button").removeClass('btn-outline-success').addClass('btn-outline-warning')
@@ -459,7 +473,10 @@ function layoutCompact() {
                 $(this).css("color", "#000000");
             }
         );
-
+        if(isLogged){
+            zalozky.attr('title', 'Záložky').empty().append('<i class="fas fa-fw fa-bookmark fa-sm"></i>')
+            $('#navbarCollapse ul li ul').append(addToBookmark.attr('class','ml-2 btn btn-sm btn-outline-warning'))
+        }
     }
     if (scitaciOperaty) {
         $('.navbar-brand').eq(1).css('font-size','1.25rem');  //zmeva velikosti pisma SCITACI OPERATY
@@ -495,7 +512,8 @@ function layoutNormal() {
     if (actaPublica) {
         $('#date-indexes').remove()
         $('#matrika-header .nav:nth-child(2)').show();
-        $('#matrika-header .nav .navbar-text').show();
+        matrika_text.show();
+
         $('#seadragon-toolbar .form-group .input-group .input-group-prepend').show()
         $('footer').removeClass('py-2').addClass('py-3');
 
@@ -508,21 +526,22 @@ function layoutNormal() {
         	$('#navbarCollapse ul .mt-1 .nav li:nth-child(3) a').removeClass('btn-sm').text('Části matriky ' + parts[0])
         }
         $('#matrika-header ul').first().append($('#navbarCollapse .mt-1'))
-        $('#matrika-header .nav .mt-1 .nav').append($('#matrika-header ul li').first())
-        let backurl = $('#matrika-header ul .mt-1 .nav li:nth-child(4) a').attr('href')
-        backurl = backurl.split('/').pop()
-        $('#matrika-header ul .mt-1 .nav li:nth-child(4) a').attr('href', '/actapublica/matrika/' + backurl)
+
+        $('#matrika-header .nav .mt-1 .nav').append(button_back)
+
+        //let backurl = $('#matrika-header ul .mt-1 .nav li:nth-child(4) a').attr('href')
+        //backurl = backurl.split('/').pop()
+        //$('#matrika-header ul .mt-1 .nav li:nth-child(4) a').attr('href', '/actapublica/matrika/' + backurl)
         $('#matrika-pripinacky').removeClass('pt-1').addClass('pt-2')
         $('#matrika-pripinacky button').removeClass('btn-sm')
         $('#seadragon-toolbar').removeClass('pt-1 pb-1').addClass('pt-2 pb-2')
         //ikony v hlavnim panelu
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(1) a').first().attr('title', '').empty().append('<i class="fas fa-search"></i>&nbsp;Vyhledávání')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(2) a').first().show();
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(3) a').first().attr('title', '').empty().append('Aktuality')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(4) a').first().attr('title', '').empty().append('Dokumenty')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(5) a').first().attr('title', '').empty().append('Nápověda')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(6) a').first().attr('title', '').empty().append('<i class="fas fa-envelope fa-sm"></i>&nbsp;Kontaktní formulář')
-        $('#navbarCollapse .navbar-nav .nav-item:nth-child(7) a').first().attr('title', '').empty().append('Záložky')
+        vyhledavani.attr('title', '').empty().append('<i class="fas fa-search"></i>&nbsp;Vyhledávání')
+        vyhledavani_dropdown.show();
+        aktuality.attr('title', '').empty().append('Aktuality')
+        dokumenty.attr('title', '').empty().append('Dokumenty')
+        napoveda.attr('title', '').empty().append('Nápověda')
+        kontaktni_formular.attr('title', '').empty().append('<i class="fas fa-envelope fa-sm"></i>&nbsp;Kontaktní formulář')
 
         $('#pill_images').first().prepend( $('#matrika-pripinacky').removeClass('ml-4') )
         $("#matrika-pripinacky button").removeClass('btn-outline-warning').addClass('btn-outline-success')
@@ -539,6 +558,12 @@ function layoutNormal() {
                 $(this).css("color", "#000000");
             }
         );
+      if(isLogged){
+          zalozky.attr('title', '').empty().append('Záložky')
+          $('#matrika-pripinacky').css('display','inline-block')
+          $('#matrika-pripinacky').after(addToBookmark.attr('class','ml-3 btn btn-outline-secondary'))
+      }
+
 
     }
     if (scitaciOperaty) {
