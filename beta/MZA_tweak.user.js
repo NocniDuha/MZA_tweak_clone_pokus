@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.3b
+// @version      0.9.7
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -73,8 +73,8 @@ if(isLogged){
                                      `+pripinacky+`
                                      </div>
                                      </div>`)
+    if(pripinacky==""){$("#matrika-pripinacky").hide()}
 }
-
 //toolbar for buttons
 let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
@@ -97,7 +97,7 @@ toolbar.after(btnDezoomify);
 
 btnMinus25.onclick = () => {
     var idx = g.currentPage() - 25;
-	g.goToPage(Math.max(idx, 0));D
+	g.goToPage(Math.max(idx, 0));
     updateNavigationButtons()
 };
 
@@ -153,7 +153,7 @@ var divSettings2 = document.createElement('div');
 var inpCompact = makeInput("compact", "Kompaktní režim", false)
 var inpNav10 = makeInput("navigace10", "+/- 10", true, [btnPlus10, btnMinus10])
 var inpNav25 = makeInput("navigace25", "+/- 25", false, [btnPlus25, btnMinus25])
-var inpStrip = makeInput("reference_strip", "Referenční pás", false)
+var inpStrip = makeInput("reference_strip", "Postranní pás", false)
 var inpPins = makeInput("dropdown_pin", "Seskupené připínáčky" ,false)
 
 
@@ -260,7 +260,7 @@ inpStrip.firstChild.onclick = () => {
             GM.setValue("reference_strip", false);
             inpStrip.firstChild.checked = false;
             g.removeReferenceStrip();
-            console.log('Referenční pás =', false);
+            console.log('Postranní pás =', false);
         } else {
             GM.setValue("reference_strip", true);
             inpStrip.firstChild.checked = true;
@@ -403,6 +403,9 @@ function compacted(bool) {
 function layoutCompact() {
     $('.navbar-brand').first().hide(); // logo skrýt
     $('nav').removeClass('py-2 px-3').addClass('py-0 px-2'); //vyska vrchniho panelu
+    $('#more-space').hide(); //skryt MZA kompakt
+    if( $( "#more-space" ).hasClass( "active" ) ){ toggleMoreSpace() }
+
     if (actaPublica) {
         matrika_text.hide();
         $('#matrika-header .nav').first().prepend(button_back)
@@ -508,6 +511,7 @@ function layoutCompact() {
 function layoutNormal() {
     $('.navbar-brand').first().show(); // logo zobrazit
     $('nav').removeClass('py-0 px-2').addClass('py-2 px-3'); //vyska vrchniho panelu
+    $('#more-space').show(); //zobrazit MZA kompakt
 
     if (actaPublica) {
         $('#date-indexes').remove()
@@ -723,4 +727,43 @@ updateNavigationButtons()
 document.body.appendChild(  script  );
 
 
+$(document).keydown(function(e){
+    //if($(".openseadragon-canvas").is(':focus')){
+    //}else{
+    if (e.which == 37 || e.which == 65) { //left arrow
+        let idx = g.currentPage() - 1;
+        g.goToPage(Math.max(idx, 0));
+        updateNavigationButtons()
+        return false;
+    }
+    if (e.which == 40 || e.which == 83) { //left arrow
+        let idx = g.currentPage() - 10;
+        g.goToPage(Math.max(idx, 0));
+        updateNavigationButtons()
+        return false;
+    }
+    if (e.which == 39 || e.which == 68) { //right arrow
+        let idx = g.currentPage() + 1;
+        g.goToPage(Math.min(idx, g.tileSources.length - 1));
+        updateNavigationButtons()
+        return false;
+    }
+    if (e.which == 38 || e.which == 87) { //up arrow
+        let idx = g.currentPage() + 10;
+        g.goToPage(Math.min(idx, g.tileSources.length - 1));
+        updateNavigationButtons()
+        return false;
+    }
+    if (e.which == 36){ //home
+        g.goToPage(0);
+        updateNavigationButtons()
+        return false;
+    }
+    if (e.which == 35) //end
+        g.goToPage(g.tileSources.length-1);
+    updateNavigationButtons();
+    return false;
+    }
+//}
+);
 });
