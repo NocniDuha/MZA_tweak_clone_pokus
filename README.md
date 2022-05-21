@@ -11,6 +11,7 @@
 - ~~Tlačítko na zamknutí zoomu a polohy *(actapublica + sčítací operáty)*~~ *MZA již okopírovalo :)*
 - možnost listování po 1, 10 nebo 25 stránkách *(actapublica + sčítací operáty)*
 - možnost seskupení špendlíku se záložkami
+- klávesové zkratky pro pohyb v dokumentech (šipky, home a end)
 - tlačítko nastavení pro vypínání nékterých funkcí
 
 ### Instalace
