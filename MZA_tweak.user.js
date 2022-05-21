@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.3
+// @version      0.9.4
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -97,7 +97,7 @@ toolbar.after(btnDezoomify);
 
 btnMinus25.onclick = () => {
     var idx = g.currentPage() - 25;
-	g.goToPage(Math.max(idx, 0));D
+	g.goToPage(Math.max(idx, 0));
     updateNavigationButtons()
 };
 
@@ -723,4 +723,30 @@ updateNavigationButtons()
 document.body.appendChild(  script  );
 
 
+$(document).keydown(function(e){
+    if($(".openseadragon-canvas").is(':focus')){
+    }else{
+    if (e.which == 37) { //left arrow
+        let idx = g.currentPage() - 1;
+        g.goToPage(Math.max(idx, 0));
+        updateNavigationButtons()
+        return false;
+    }
+    if (e.which == 39) { //right arrow
+        let idx = g.currentPage() + 1;
+        g.goToPage(Math.min(idx, g.tileSources.length - 1));
+        updateNavigationButtons()
+        return false;
+    }
+    if (e.which == 36){ //home
+        g.goToPage(0);
+        updateNavigationButtons()
+        return false;
+    }
+    if (e.which == 35) //end
+        g.goToPage(g.tileSources.length-1);
+        updateNavigationButtons();
+        return false;
+    }
+});
 });
