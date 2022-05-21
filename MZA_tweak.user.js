@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.5
+// @version      0.9.6
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -73,8 +73,8 @@ if(isLogged){
                                      `+pripinacky+`
                                      </div>
                                      </div>`)
+    if(pripinacky==""){$("#matrika-pripinacky").hide()}
 }
-
 //toolbar for buttons
 let toolbar = document.querySelector('#seadragon-toolbar .form-group');
 
@@ -153,7 +153,7 @@ var divSettings2 = document.createElement('div');
 var inpCompact = makeInput("compact", "Kompaktní režim", false)
 var inpNav10 = makeInput("navigace10", "+/- 10", true, [btnPlus10, btnMinus10])
 var inpNav25 = makeInput("navigace25", "+/- 25", false, [btnPlus25, btnMinus25])
-var inpStrip = makeInput("reference_strip", "Referenční pás", false)
+var inpStrip = makeInput("reference_strip", "Postranní pás", false)
 var inpPins = makeInput("dropdown_pin", "Seskupené připínáčky" ,false)
 
 
@@ -260,7 +260,7 @@ inpStrip.firstChild.onclick = () => {
             GM.setValue("reference_strip", false);
             inpStrip.firstChild.checked = false;
             g.removeReferenceStrip();
-            console.log('Referenční pás =', false);
+            console.log('Postranní pás =', false);
         } else {
             GM.setValue("reference_strip", true);
             inpStrip.firstChild.checked = true;
@@ -724,16 +724,28 @@ document.body.appendChild(  script  );
 
 
 $(document).keydown(function(e){
-    if($(".openseadragon-canvas").is(':focus')){
-    }else{
+    //if($(".openseadragon-canvas").is(':focus')){
+    //}else{
     if (e.which == 37 || e.which == 65) { //left arrow
         let idx = g.currentPage() - 1;
         g.goToPage(Math.max(idx, 0));
         updateNavigationButtons()
         return false;
     }
+    if (e.which == 40 || e.which == 83) { //left arrow
+        let idx = g.currentPage() - 10;
+        g.goToPage(Math.max(idx, 0));
+        updateNavigationButtons()
+        return false;
+    }
     if (e.which == 39 || e.which == 68) { //right arrow
         let idx = g.currentPage() + 1;
+        g.goToPage(Math.min(idx, g.tileSources.length - 1));
+        updateNavigationButtons()
+        return false;
+    }
+    if (e.which == 38 || e.which == 87) { //up arrow
+        let idx = g.currentPage() + 10;
         g.goToPage(Math.min(idx, g.tileSources.length - 1));
         updateNavigationButtons()
         return false;
@@ -745,8 +757,9 @@ $(document).keydown(function(e){
     }
     if (e.which == 35) //end
         g.goToPage(g.tileSources.length-1);
-        updateNavigationButtons();
-        return false;
+    updateNavigationButtons();
+    return false;
     }
-});
+//}
+);
 });
