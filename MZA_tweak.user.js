@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.6
+// @version      0.9.7
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -403,6 +403,9 @@ function compacted(bool) {
 function layoutCompact() {
     $('.navbar-brand').first().hide(); // logo skrýt
     $('nav').removeClass('py-2 px-3').addClass('py-0 px-2'); //vyska vrchniho panelu
+    $('#more-space').hide(); //skryt MZA kompakt
+    if( $( "#more-space" ).hasClass( "active" ) ){ toggleMoreSpace() }
+
     if (actaPublica) {
         matrika_text.hide();
         $('#matrika-header .nav').first().prepend(button_back)
@@ -508,6 +511,7 @@ function layoutCompact() {
 function layoutNormal() {
     $('.navbar-brand').first().show(); // logo zobrazit
     $('nav').removeClass('py-0 px-2').addClass('py-2 px-3'); //vyska vrchniho panelu
+    $('#more-space').show(); //zobrazit MZA kompakt
 
     if (actaPublica) {
         $('#date-indexes').remove()
@@ -724,8 +728,8 @@ document.body.appendChild(  script  );
 
 
 $(document).keydown(function(e){
-    //if($(".openseadragon-canvas").is(':focus')){
-    //}else{
+    if($("#input-page").is(':focus') || $(".openseadragon-canvas").is(':focus')){
+    }else{
     if (e.which == 37 || e.which == 65) { //left arrow
         let idx = g.currentPage() - 1;
         g.goToPage(Math.max(idx, 0));
@@ -760,6 +764,6 @@ $(document).keydown(function(e){
     updateNavigationButtons();
     return false;
     }
-//}
+}
 );
 });
