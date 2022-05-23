@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.7
+// @version      0.9.8
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -759,11 +759,20 @@ $(document).keydown(function(e){
         updateNavigationButtons()
         return false;
     }
-    if (e.which == 35) //end
+    if (e.which == 35){ //end
         g.goToPage(g.tileSources.length-1);
-    updateNavigationButtons();
+        updateNavigationButtons();
+        return false;
+    }
+    if (e.which == 107){ //plus
+        g.viewport.zoomBy(1.1)
     return false;
     }
+    if (e.which == 109){ //plus
+        g.viewport.zoomBy(0.9)
+    return false;
+    }
+  }
 }
 );
 });
