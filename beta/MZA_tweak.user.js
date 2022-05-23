@@ -728,8 +728,8 @@ document.body.appendChild(  script  );
 
 
 $(document).keydown(function(e){
-    //if($(".openseadragon-canvas").is(':focus')){
-    //}else{
+    if($("#input-page").is(':focus') || $(".openseadragon-canvas").is(':focus')){
+    }else{
     if (e.which == 37 || e.which == 65) { //left arrow
         let idx = g.currentPage() - 1;
         g.goToPage(Math.max(idx, 0));
@@ -764,6 +764,6 @@ $(document).keydown(function(e){
     updateNavigationButtons();
     return false;
     }
-//}
+}
 );
 });
