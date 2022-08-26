@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         MZA tweak
-// @version      0.9.7
+// @version      0.9.8
 // @downloadURL  https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @updateURL    https://github.com/rasasak/MZA_tweak/raw/main/MZA_tweak.user.js
 // @description  Malá vylepšení pro web MZA...
@@ -135,7 +135,7 @@ btnPlus25.onclick = () => {
 btnDezoomify.onclick = () => {
     let dezoomify_url = g.tileSources[g.currentPage()];
     console.log("DZI: " + dezoomify_url);
-    dezoomify_url = "https://dezoomify.rasasak.cz/#" + dezoomify_url;
+    dezoomify_url = "https://dezoomify.rasasak.eu/#" + dezoomify_url;
     window.open(dezoomify_url, '_blank');
 };
 
